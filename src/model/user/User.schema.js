@@ -19,7 +19,7 @@ const UserSchema = new Schema({
 	},
 	phone: {
 		type: Number,
-		maxLength: 50,
+		maxLength: 10,
 	},
 	email: {
 		type: String,
@@ -31,6 +31,18 @@ const UserSchema = new Schema({
 		minLength: 8,
 		maxLength: 100,
 		required: true,
+	},
+	refreshJWT: {
+		token: {
+			type: String,
+			maxLength: 500,
+			default: "",
+		},
+		addedAt: {
+			type: Date,
+			required: true,
+			default: Date.now(),
+		},
 	},
 });
 

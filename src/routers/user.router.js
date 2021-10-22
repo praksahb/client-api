@@ -42,8 +42,10 @@ router.post("/", async (req, res) => {
 
 //user sign in router
 router.post("/login", async (req, res) => {
+	console.log(req.body);
 	//USER AUTH via bcrypt
 	const { email, password } = req.body;
+	// console.log({ email, password });
 	//server side check for null values
 	if (!email || !password) {
 		return res.json({ status: "error", message: "Invalid form submission" });
@@ -51,7 +53,7 @@ router.post("/login", async (req, res) => {
 
 	//get user with email from db
 	const user = await getUserByEmail(email);
-	console.log(user);
+	//console.log(user);
 	//get password from db
 	const passFromDb = user && user._id ? user.password : null;
 	if (!passFromDb) {
@@ -63,8 +65,8 @@ router.post("/login", async (req, res) => {
 		return res.json({ status: "error", message: "invalid email or password" });
 	}
 	//create AUTH TOKENS
-	const accessJWT = await createAccessJWT(user.email);
-	const refreshJWT = await createRefreshJWT(user.email);
+	const accessJWT = await createAccessJWT(user.email, `${user._id}`);
+	const refreshJWT = await createRefreshJWT(user.email, `${user._id}`);
 	//send tokens to user
 	res.json({
 		status: "success",
