@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3030;
 
 //API security
 //app.use(helmet());

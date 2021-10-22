@@ -10,7 +10,7 @@ const {
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt.helper");
 
 router.all("/", (req, res, next) => {
-	//res.json({ message: "return from user router" });
+	res.json({ message: "return from user router, let's go" });
 
 	next();
 });
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
 //user sign in router
 router.post("/login", async (req, res) => {
 	console.log(req.body);
-	//USER AUTH via bcrypt
+	//USER AUTHentication via bcrypt
 	const { email, password } = req.body;
 	// console.log({ email, password });
 	//server side check for null values
@@ -53,8 +53,8 @@ router.post("/login", async (req, res) => {
 
 	//get user with email from db
 	const user = await getUserByEmail(email);
-	//console.log(user);
-	//get password from db
+	console.log(user._id.toString());
+	//get password-bcrypted from db
 	const passFromDb = user && user._id ? user.password : null;
 	if (!passFromDb) {
 		return res.json({ status: "error", message: "invalid email or password" });
