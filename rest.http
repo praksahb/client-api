@@ -4,10 +4,20 @@ POST http://localhost:3001/v1/user
 Content-Type: application/json
 
 {
-    "name": "Random Name1",
-    "company": "Company1",
-    "address": "Random address 1",
-    "phone": "01020304050",
-    "email": "random3@gmail.com",
+    "name": "Mrep Ayrahca",
+    "company": "Random Daftar",
+    "address": "Lamba Ghar, Chor vilas",
+    "phone": "1010808030",
+    "email": "ayra@gmail.com",
+    "password": "secret123"
+}
+
+### user signin endpoint
+
+POST http://localhost:3030/v1/user/login
+Content-Type: application/json
+
+{
+    "email": "ayra@gmail.com",
     "password": "secret123"
 }
