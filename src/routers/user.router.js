@@ -7,6 +7,7 @@ const {
 	hashPassword,
 	comparePassword,
 } = require("../../src/helpers/bcrypt.helper");
+const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt.helper");
 
 router.all("/", (req, res, next) => {
 	//res.json({ message: "return from user router" });
@@ -41,29 +42,36 @@ router.post("/", async (req, res) => {
 
 //user sign in router
 router.post("/login", async (req, res) => {
+	//USER AUTH via bcrypt
 	const { email, password } = req.body;
-
-	//get user with email from db
-	const user = await getUserByEmail(email);
-	console.log(user);
-
-	//hash our password and compare with db- comparePassword func from bcrypt
-	const passFromDb = user && user._id ? user.password : null;
-
-	if (!passFromDb) {
-		return res.json({
-			status: "error",
-			message: "invalid email or password",
-		});
-	}
-	const result = await comparePassword(password, passFromDb);
-	console.log(result);
-
+	//server side check for null values
 	if (!email || !password) {
 		return res.json({ status: "error", message: "Invalid form submission" });
 	}
 
-	res.json({ status: "success", message: "Login successful" });
+	//get user with email from db
+	const user = await getUserByEmail(email);
+	console.log(user);
+	//get password from db
+	const passFromDb = user && user._id ? user.password : null;
+	if (!passFromDb) {
+		return res.json({ status: "error", message: "invalid email or password" });
+	}
+	//compare with db- comparePassword func from bcrypt
+	const result = await comparePassword(password, passFromDb);
+	if (!result) {
+		return res.json({ status: "error", message: "invalid email or password" });
+	}
+	//create AUTH TOKENS
+	const accessJWT = await createAccessJWT(user.email);
+	const refreshJWT = await createRefreshJWT(user.email);
+	//send tokens to user
+	res.json({
+		status: "success",
+		message: "Login successful",
+		accessJWT,
+		refreshJWT,
+	});
 });
 
 module.exports = router;
