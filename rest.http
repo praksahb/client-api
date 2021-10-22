@@ -1,0 +1,13 @@
+### User sign up endpoint
+
+POST http://localhost:3001/v1/user
+Content-Type: application/json
+
+{
+    "name": "Random Name1",
+    "company": "Company1",
+    "address": "Random address 1",
+    "phone": "01020304050",
+    "email": "random3@gmail.com",
+    "password": "secret123"
+}
