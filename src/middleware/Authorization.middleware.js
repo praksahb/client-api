@@ -1,5 +1,5 @@
 const { verifyAccessJWT } = require("../helpers/jwt.helper");
-const { getJWT } = require("../helpers/redis.helper");
+const { getJWT, deleteJWT } = require("../helpers/redis.helper");
 
 const userAuthorization = async (req, res, next) => {
 	const { authorization } = req.headers;
@@ -15,14 +15,12 @@ const userAuthorization = async (req, res, next) => {
 		if (!userId) {
 			return res.status(404).json({ message: "forbidden" });
 		}
-
-		//3. extract user id
+		//send id to user.router for steps 3 and 4
 		req.userId = userId;
-
 		return next();
 	}
-	//4. get user profile based on the user id
 
+	deleteJWT(authorization);
 	return res.status(404).json({ message: "forbidden" });
 };
 

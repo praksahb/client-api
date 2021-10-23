@@ -23,9 +23,9 @@ router.all("/", (req, res, next) => {
 
 //GET user profile router
 router.get("/", userAuthorization, async (req, res) => {
-	//3. extract user id
-	const _id = req.userId;
+	//3. extract user id- 1. & 2. done inside auth middleware
 
+	const _id = req.userId;
 	const userProfile = await getUserById(_id);
 	//4. get user profile based on the user id
 	res.json({ user: userProfile });

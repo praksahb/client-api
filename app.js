@@ -35,10 +35,12 @@ app.use(express.json());
 //load routers
 const userRouter = require("./src/routers/user.router");
 const ticketRouter = require("./src/routers/ticket.router");
+const tokenRouter = require("./src/routers/token.router");
 
 //use Router
 app.use("/v1/user", userRouter);
 app.use("/v1/ticket", ticketRouter);
+app.use("/v1/tokens", tokenRouter);
 
 //error handler
 const handleError = require("./src/utils/errorHandler");
