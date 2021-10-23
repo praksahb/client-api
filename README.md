@@ -23,11 +23,14 @@ route for client-users API '/v1/user/'
 | --- | -------------------------------- | ----- | -------- | ---------- | -------------------------------------------- |
 | 1   | '/v1/user/login'                 | POST  | TODO     | No         | Verify user auth and return JWT              |
 | 2   | 'v1/user/request-reset-password' | POST  | TODO     | No         | Verify email and email pin to reset password |
+| 3   | '/v1/user/reset-password'        | PUT   | TODO     | NO         | Replace with new password                    |
+| 4   | '/v1/user'                       | GET   | TODO     | Yes        | Get user info                                |
 
 ### Ticket API Resources
 
 routes for '/v1/ticket/'
 
-| #   | Routers      | Verbs | Progress | Is Private | Description                       |
-| --- | ------------ | ----- | -------- | ---------- | --------------------------------- |
-| 1   | '/v1/ticket' | GET   | TODO     | Yes        | Get all ticket for logged in user |
+| #   | Routers           | Verbs | Progress | Is Private | Description                       |
+| --- | ----------------- | ----- | -------- | ---------- | --------------------------------- |
+| 1   | '/v1/ticket'      | GET   | TODO     | Yes        | Get all ticket for logged in user |
+| 2   | '/v1/ticket/{id}' | GET   | TODO     | Yes        | Get a ticket details              |

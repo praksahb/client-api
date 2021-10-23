@@ -2,17 +2,33 @@ const express = require("express");
 const { route } = require("./ticket.router");
 const router = express.Router();
 
-const { insertUser, getUserByEmail } = require("../model/user/User.model");
+const {
+	insertUser,
+	getUserByEmail,
+	getUserById,
+} = require("../model/user/User.model");
 const {
 	hashPassword,
 	comparePassword,
 } = require("../../src/helpers/bcrypt.helper");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt.helper");
+const { userAuthorization } = require("../middleware/Authorization.middleware");
 
 router.all("/", (req, res, next) => {
-	res.json({ message: "return from user router, let's go" });
+	//below line if uncommented creates ERR_HTTP_HEADERS sent- multiple headers due to res.json
+	//res.json({ message: "return from user router, let's go" });
 
 	next();
+});
+
+//GET user profile router
+router.get("/", userAuthorization, async (req, res) => {
+	//3. extract user id
+	const _id = req.userId;
+
+	const userProfile = await getUserById(_id);
+	//4. get user profile based on the user id
+	res.json({ user: userProfile });
 });
 
 //Create new user route

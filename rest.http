@@ -14,10 +14,15 @@ Content-Type: application/json
 
 ### user signin endpoint
 
-POST http://localhost:3030/v1/user/login
+POST http://localhost:3001/v1/user/login
 Content-Type: application/json
 
 {
     "email": "ayra@gmail.com",
     "password": "secret123"
 }
+
+### GET a user profile endpoint
+
+GET http://localhost:3001/v1/user
+Authorization: 6gImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM0OTQ1OTk4LCJleHAiOjE2MzQ5NDY4OTh9.AyVzzZ6s3KKk7QGIGVzoPPKa_4p1sn0ob_yNx79_LwE
