@@ -12,7 +12,6 @@ Content-Type: application/json
     "password": "secret123"
 }
 
-### user signin endpoint 
 ###login
 
 POST http://localhost:3001/v1/user/login
@@ -20,7 +19,7 @@ Content-Type: application/json
 
 {
     "email": "ayra@gmail.com",
-    "password": "secret123"
+    "password": "pass123"
 }
 
 ### GET a user profile endpoint
@@ -40,5 +39,16 @@ POST http://localhost:3001/v1/user/reset-password
 Content-Type: application/json
 
 {
+    "email": "ayra@gmail.com"
+}
+
+###Update new password endpoint
+
+PATCH http://localhost:3001/v1/user/reset-password
+Content-Type: application/json
+
+{
     "email": "ayra@gmail.com",
+    "pin":  "827304",
+    "newPassword": "pass123"
 }

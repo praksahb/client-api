@@ -6,6 +6,7 @@ const {
 	insertUser,
 	getUserByEmail,
 	getUserById,
+	updatePassword,
 } = require("../model/user/User.model");
 const {
 	hashPassword,
@@ -13,7 +14,12 @@ const {
 } = require("../../src/helpers/bcrypt.helper");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt.helper");
 const { userAuthorization } = require("../middleware/Authorization.middleware");
-const { setPasswordResetPin } = require("../model/resetPin/ResetPin.model");
+const {
+	setPasswordResetPin,
+	getPinByEmailPin,
+	deletePin,
+} = require("../model/resetPin/ResetPin.model");
+const { emailProcessor } = require("../helpers/email.helper");
 
 router.all("/", (req, res, next) => {
 	//below line if uncommented creates ERR_HTTP_HEADERS sent- multiple headers due to res.json
@@ -102,25 +108,68 @@ router.post("/reset-password", async (req, res) => {
 	const user = await getUserByEmail(email);
 
 	if (user && user.id) {
-		// 3. create unique 6 digit pin
+		// 3. create unique 6 digit pin AND 4. save pin and email in new collections
 		const setPin = await setPasswordResetPin(email);
-		return res.json(setPin);
+		// 5. email the pin
+		await emailProcessor({
+			email,
+			pin: setPin.pin,
+			type: "request-new-password",
+		});
+		return res.json({
+			status: "success",
+			message:
+				"The password reset pin will be sent shortly to the email address provided",
+		});
 	}
 
-	return res.json({
+	res.json({
 		status: "error",
-		message: "If email exists, the password reset pin will be sent shortly",
+		message:
+			"The password reset pin will be sent shortly to the email address provided",
 	});
 });
-// 4. save pin and email db
-// 5. email the pin
 
 // B. update password in db
-// 1.receive email pin and new password
-// 2. validate pin
-// 3. encrypt new password
-// 4. update password in db
-// 5. send email Notification
+router.patch("/reset-password", async (req, res) => {
+	// 1.receive email pin and new password
+	const { email, pin, newPassword } = req.body;
+
+	const getPin = await getPinByEmailPin(email, pin);
+	// 2. validate pin
+	if (getPin?._id) {
+		const dbDate = getPin.addedAt;
+		const expiresIn = 1;
+
+		let expDate = dbDate.setDate(dbDate.getDate() + expiresIn);
+		const today = new Date();
+
+		if (today > expDate) {
+			return res.json({ status: "error", message: "Invalid or expired pin" });
+		}
+		// 3. encrypt new password
+		const hashPass = await hashPassword(newPassword);
+		// 4. update password in db
+		const result = await updatePassword(email, hashPass);
+
+		if (result._id) {
+			// 5. send email Notification
+			await emailProcessor({ email, type: "password-update-success" });
+			//delete pin from db
+			deletePin(email, pin);
+
+			return res.json({
+				status: "success",
+				message: "Your password has been updated",
+			});
+		}
+	}
+
+	res.json({
+		status: "error",
+		message: "Unable to update your password, please try again later",
+	});
+});
 
 // C. Server side form validation
 // 1. create middleware to validate form data
