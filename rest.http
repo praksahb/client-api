@@ -1,4 +1,4 @@
-### User sign up endpoint
+### User sign up endpoint 
 
 POST http://localhost:3001/v1/user
 Content-Type: application/json
@@ -12,7 +12,8 @@ Content-Type: application/json
     "password": "secret123"
 }
 
-### user signin endpoint
+### user signin endpoint 
+###login
 
 POST http://localhost:3001/v1/user/login
 Content-Type: application/json
@@ -25,4 +26,19 @@ Content-Type: application/json
 ### GET a user profile endpoint
 
 GET http://localhost:3001/v1/user
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM0OTUyNzY2LCJleHAiOjE2MzQ5NTM2NjZ9.QeKjP5vlnwsqDWEv-KAaWcWmR1IRj2Pe-ttpCfdLO
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM0OTY4MzU5LCJleHAiOjE2MzQ5Njg0MTl9.HLfgVEKkKTjUgbo4q9w6QLE_mP6547VR5Kywzj-lstQ
+
+### token routers
+### GET refresh token
+
+GET http://localhost:3001/v1/tokens/
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM0OTY3MDYyLCJleHAiOjE2Mzc1NTkwNjJ9.vDwBQ0cl1BzJ4aEsZgp1P3uGuzFDznfTb6XdRp4OUZg
+
+###reset password endpoints
+
+POST http://localhost:3001/v1/user/reset-password
+Content-Type: application/json
+
+{
+    "email": "ayra@gmail.com",
+}

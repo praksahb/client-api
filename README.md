@@ -19,12 +19,12 @@ Note: start uses nodemon to run node
 
 all routes for client-users API '/v1/user/'
 
-| #   | Routers                          | Verbs | Progress | Is Private | Description                                  |
-| --- | -------------------------------- | ----- | -------- | ---------- | -------------------------------------------- |
-| 1   | '/v1/user/login'                 | POST  | Done     | No         | Verify user auth and return JWT              |
-| 2   | 'v1/user/request-reset-password' | POST  | TODO     | No         | Verify email and email pin to reset password |
-| 3   | '/v1/user/reset-password'        | PUT   | TODO     | NO         | Replace with new password                    |
-| 4   | '/v1/user'                       | GET   | Done     | Yes        | Get user info                                |
+| #   | Routers                   | Verbs | Progress | Is Private | Description                                  |
+| --- | ------------------------- | ----- | -------- | ---------- | -------------------------------------------- |
+| 1   | '/v1/user/login'          | POST  | Done     | No         | Verify user auth and return JWT              |
+| 2   | 'v1/user/reset-password'  | POST  | TODO     | No         | Verify email and email pin to reset password |
+| 3   | '/v1/user/reset-password' | PATCH | TODO     | NO         | Replace with new password                    |
+| 4   | '/v1/user'                | GET   | Done     | Yes        | Get user info                                |
 
 ### Ticket API Resources
 

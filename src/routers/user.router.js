@@ -13,6 +13,7 @@ const {
 } = require("../../src/helpers/bcrypt.helper");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt.helper");
 const { userAuthorization } = require("../middleware/Authorization.middleware");
+const { setPasswordResetPin } = require("../model/resetPin/ResetPin.model");
 
 router.all("/", (req, res, next) => {
 	//below line if uncommented creates ERR_HTTP_HEADERS sent- multiple headers due to res.json
@@ -91,5 +92,37 @@ router.post("/login", async (req, res) => {
 		refreshJWT,
 	});
 });
+
+//reset password
+// A. Create and send password reset pin number
+router.post("/reset-password", async (req, res) => {
+	// 1.Receive email
+	const { email } = req.body;
+	// 2. check if user exists in db using email
+	const user = await getUserByEmail(email);
+
+	if (user && user.id) {
+		// 3. create unique 6 digit pin
+		const setPin = await setPasswordResetPin(email);
+		return res.json(setPin);
+	}
+
+	return res.json({
+		status: "error",
+		message: "If email exists, the password reset pin will be sent shortly",
+	});
+});
+// 4. save pin and email db
+// 5. email the pin
+
+// B. update password in db
+// 1.receive email pin and new password
+// 2. validate pin
+// 3. encrypt new password
+// 4. update password in db
+// 5. send email Notification
+
+// C. Server side form validation
+// 1. create middleware to validate form data
 
 module.exports = router;
