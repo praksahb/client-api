@@ -20,6 +20,10 @@ const {
 	deletePin,
 } = require("../model/resetPin/ResetPin.model");
 const { emailProcessor } = require("../helpers/email.helper");
+const {
+	resetPassReqValidation,
+	updatePassReqValidation,
+} = require("../middleware/formValidation.middleware");
 
 router.all("/", (req, res, next) => {
 	//below line if uncommented creates ERR_HTTP_HEADERS sent- multiple headers due to res.json
@@ -101,7 +105,7 @@ router.post("/login", async (req, res) => {
 
 //reset password
 // A. Create and send password reset pin number
-router.post("/reset-password", async (req, res) => {
+router.post("/reset-password", resetPassReqValidation, async (req, res) => {
 	// 1.Receive email
 	const { email } = req.body;
 	// 2. check if user exists in db using email
@@ -131,13 +135,13 @@ router.post("/reset-password", async (req, res) => {
 });
 
 // B. update password in db
-router.patch("/reset-password", async (req, res) => {
+router.patch("/reset-password", updatePassReqValidation, async (req, res) => {
 	// 1.receive email pin and new password
 	const { email, pin, newPassword } = req.body;
 
 	const getPin = await getPinByEmailPin(email, pin);
 	// 2. validate pin
-	if (getPin?._id) {
+	if (getPin && getPin._id) {
 		const dbDate = getPin.addedAt;
 		const expiresIn = 1;
 

@@ -39,7 +39,7 @@ POST http://localhost:3001/v1/user/reset-password
 Content-Type: application/json
 
 {
-    "email": "ayra@gmail.com"
+    "emailp": "ayra@gmail.com"
 }
 
 ###Update new password endpoint
@@ -49,6 +49,6 @@ Content-Type: application/json
 
 {
     "email": "ayra@gmail.com",
-    "pin":  "827304",
+    "pin":  "379722",
     "newPassword": "pass123"
 }
