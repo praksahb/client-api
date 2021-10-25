@@ -24,18 +24,22 @@ all routes for client-users API '/v1/user/' to either login, reset & update new 
 | 1   | '/v1/user'                | GET    | Done     | Yes        | Auth & Get user info                               |
 | 2   | '/v1/user'                | POST   | Done     | No         | Create a user                                      |
 | 3   | '/v1/user/login'          | POST   | Done     | Yes        | Verify user auth and return JWT                    |
-| 4   | 'v1/user/reset-password'  | POST   | TODO     | No         | Verify email to receive pin(OTP) to reset password |
-| 5   | '/v1/user/reset-password' | PATCH  | TODO     | NO         | Verify pin and update new password                 |
+| 4   | 'v1/user/reset-password'  | POST   | Done     | No         | Verify email to receive pin(OTP) to reset password |
+| 5   | '/v1/user/reset-password' | PATCH  | Done     | NO         | Verify pin and update new password                 |
 | 6   | 'v1/user/logout'          | DELETE | Done     | Yes        | Delete user JWT                                    |
 
 ### Ticket API Resources
 
 all user API routes for '/v1/ticket/'
 
-| #   | Routers           | Verbs | Progress | Is Private | Description                       |
-| --- | ----------------- | ----- | -------- | ---------- | --------------------------------- |
-| 1   | '/v1/ticket'      | GET   | TODO     | Yes        | Get all ticket for logged in user |
-| 2   | '/v1/ticket/{id}' | GET   | TODO     | Yes        | Get a ticket details              |
+| #   | Routers                        | Verbs  | Progress | Is Private | Description                       |
+| --- | ------------------------------ | ------ | -------- | ---------- | --------------------------------- |
+| 1   | '/v1/ticket'                   | GET    | TODO     | Yes        | Get all ticket for logged in user |
+| 2   | '/v1/ticket/{id}'              | GET    | TODO     | Yes        | Get a ticket details              |
+| 3   | '/v1/ticket'                   | POST   | TODO     | Yes        | Create a new ticket               |
+| 4   | '/v1/ticket/{id}'              | PUT    | TODO     | Yes        | Update ticket details             |
+| 5   | '/v1/ticket/close-ticket/{id}' | PATCH  | TODO     | Yes        | Update ticket status to close     |
+| 6   | '/v1/ticket/{id}'              | DELETE | Done     | Yes        | Delete a ticket                   |
 
 ### Tokens API Resources
 
