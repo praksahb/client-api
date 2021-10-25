@@ -1,9 +1,9 @@
 const { ResetPinSchema } = require("./ResetPin.schema");
-const { randomPinNumber } = require("../../utils/randomGenerator");
+const { randomPinNumber } = require("../../utils/randomNumberGenerator");
 
+//create and store pin in new db collections
 const setPasswordResetPin = async (email) => {
-	//raqndom 6 digit pin
-	const pinLength = 6;
+	const pinLength = process.env.NUM_PIN_DIG;
 	const randomPin = await randomPinNumber(pinLength);
 
 	const resetObj = {
@@ -19,6 +19,7 @@ const setPasswordResetPin = async (email) => {
 	});
 };
 
+//return a promised pin using email
 const getPinByEmailPin = (email, pin) => {
 	return new Promise((resolve, reject) => {
 		try {
@@ -36,6 +37,7 @@ const getPinByEmailPin = (email, pin) => {
 	});
 };
 
+//delete pin once used for authentication
 const deletePin = (email, pin) => {
 	try {
 		ResetPinSchema.findOneAndDelete({ email, pin }, (error) => {

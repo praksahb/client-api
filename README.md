@@ -17,14 +17,16 @@ Note: start uses nodemon to run node
 
 ### Client-User API Resources
 
-all routes for client-users API '/v1/user/'
+all routes for client-users API '/v1/user/' to either login, reset & update new password, and display users page
 
-| #   | Routers                   | Verbs | Progress | Is Private | Description                                  |
-| --- | ------------------------- | ----- | -------- | ---------- | -------------------------------------------- |
-| 1   | '/v1/user/login'          | POST  | Done     | No         | Verify user auth and return JWT              |
-| 2   | 'v1/user/reset-password'  | POST  | TODO     | No         | Verify email and email pin to reset password |
-| 3   | '/v1/user/reset-password' | PATCH | TODO     | NO         | Replace with new password                    |
-| 4   | '/v1/user'                | GET   | Done     | Yes        | Get user info                                |
+| #   | Routers                   | Verbs  | Progress | Is Private | Description                                        |
+| --- | ------------------------- | ------ | -------- | ---------- | -------------------------------------------------- |
+| 1   | '/v1/user'                | GET    | Done     | Yes        | Auth & Get user info                               |
+| 2   | '/v1/user'                | POST   | Done     | No         | Create a user                                      |
+| 3   | '/v1/user/login'          | POST   | Done     | Yes        | Verify user auth and return JWT                    |
+| 4   | 'v1/user/reset-password'  | POST   | TODO     | No         | Verify email to receive pin(OTP) to reset password |
+| 5   | '/v1/user/reset-password' | PATCH  | TODO     | NO         | Verify pin and update new password                 |
+| 6   | 'v1/user/logout'          | DELETE | Done     | Yes        | Delete user JWT                                    |
 
 ### Ticket API Resources
 
@@ -37,8 +39,8 @@ all user API routes for '/v1/ticket/'
 
 ### Tokens API Resources
 
-all token API routes follows '/v1/tokens'
+all token API routes follows '/v1/tokens' for existing logged user authentication
 
-| #   | Routers      | Verbs | Progress | Is Private | Description            |
-| --- | ------------ | ----- | -------- | ---------- | ---------------------- |
-| 1   | '/v1/tokens' | GET   | Done     | No         | Get a fresh access JWT |
+| #   | Routers      | Verbs | Progress | Is Private | Description                                 |
+| --- | ------------ | ----- | -------- | ---------- | ------------------------------------------- |
+| 1   | '/v1/tokens' | GET   | Done     | No         | Verify refresh JWT & Get a fresh access JWT |

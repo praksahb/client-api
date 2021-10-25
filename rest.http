@@ -1,54 +1,54 @@
-### User sign up endpoint 
+### User sign up POST request - endpoint 
 
 POST http://localhost:3001/v1/user
 Content-Type: application/json
 
 {
-    "name": "Mrep Ayrahca",
-    "company": "Random Daftar",
-    "address": "Lamba Ghar, Chor vilas",
-    "phone": "1010808030",
-    "email": "ayra@gmail.com",
-    "password": "secret123"
+    "name": "Charles Sobhraj",
+    "company": "diamonds pvt Ltd.",
+    "address": "Chor vilas,Lamba Ghar",
+    "phone": "8930245099",
+    "email": "rasta2@lasta.com",
+    "password": "friendlyfire_123"
 }
 
-###login
+###login authorization POST request
 
 POST http://localhost:3001/v1/user/login
 Content-Type: application/json
 
 {
-    "email": "ayra@gmail.com",
-    "password": "pass123"
+    "email": "rasta2@lasta.com",
+    "password": "friendlyfire_123"
 }
 
-### GET a user profile endpoint
+### GET request user profile - endpoint
 
 GET http://localhost:3001/v1/user
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM0OTY4MzU5LCJleHAiOjE2MzQ5Njg0MTl9.HLfgVEKkKTjUgbo4q9w6QLE_mP6547VR5Kywzj-lstQ
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhMkBsYXN0YS5jb20iLCJpYXQiOjE2MzUxMjUxNjksImV4cCI6MTYzNTEyNjA2OX0.4WyJLC7ASowVQv8_Fc_QKvRQRokH3XMxsrXel9712p0
 
 ### token routers
-### GET refresh token
+### authentication? GET refresh token request - once logged in, user can use refresh token for 30days
 
 GET http://localhost:3001/v1/tokens/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM0OTY3MDYyLCJleHAiOjE2Mzc1NTkwNjJ9.vDwBQ0cl1BzJ4aEsZgp1P3uGuzFDznfTb6XdRp4OUZg
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhMkBsYXN0YS5jb20iLCJpYXQiOjE2MzUxMjUxNjksImV4cCI6MTYzNzcxNzE2OX0.iNfhlm1Me1i7rS-N8Mt9sulH4ep8bWlxV0f2ob9kdDY
 
-###reset password endpoints
+###reset password POST request API to receive reset password pin on email
 
 POST http://localhost:3001/v1/user/reset-password
 Content-Type: application/json
 
 {
-    "emailp": "ayra@gmail.com"
+    "email": "rasta2@lasta.com"
 }
 
-###Update new password endpoint
+###Update new password using pin sent to email - endpoint
 
 PATCH http://localhost:3001/v1/user/reset-password
 Content-Type: application/json
 
 {
-    "email": "ayra@gmail.com",
-    "pin":  "379722",
+    "email": "rasta2@lasta.com",
+    "pin":  "241096",
     "newPassword": "pass123"
 }

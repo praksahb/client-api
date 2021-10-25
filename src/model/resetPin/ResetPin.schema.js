@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//Schema - structure of data - needed for resetting password
 const ResetPinSchema = new Schema({
 	pin: {
 		type: String,

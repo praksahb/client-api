@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
+	//sending and receiving addresses for email
 	host: "smtp.ethereal.email",
 	port: 587,
 	auth: {
@@ -30,6 +31,7 @@ const send = (info) => {
 };
 
 const emailProcessor = ({ email, pin, type }) => {
+	//email body - function to send info to email
 	let emailInfo = "";
 	switch (type) {
 		case "request-new-password":

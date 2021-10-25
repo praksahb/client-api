@@ -7,6 +7,7 @@ const {
 	getUserByEmail,
 	getUserById,
 	updatePassword,
+	storeUserRefreshJWT,
 } = require("../model/user/User.model");
 const {
 	hashPassword,
@@ -21,9 +22,11 @@ const {
 } = require("../model/resetPin/ResetPin.model");
 const { emailProcessor } = require("../helpers/email.helper");
 const {
-	resetPassReqValidation,
+	emailValidation,
 	updatePassReqValidation,
+	signUpDataValidation,
 } = require("../middleware/formValidation.middleware");
+const { deleteJWT } = require("../helpers/redis.helper");
 
 router.all("/", (req, res, next) => {
 	//below line if uncommented creates ERR_HTTP_HEADERS sent- multiple headers due to res.json
@@ -43,7 +46,7 @@ router.get("/", userAuthorization, async (req, res) => {
 });
 
 //Create new user route
-router.post("/", async (req, res) => {
+router.post("/", signUpDataValidation, async (req, res) => {
 	const { name, company, address, phone, email, password } = req.body;
 
 	try {
@@ -70,7 +73,7 @@ router.post("/", async (req, res) => {
 //user sign in router
 router.post("/login", async (req, res) => {
 	console.log(req.body);
-	//USER AUTHentication via bcrypt
+	//USER email AUTHentication via bcrypt
 	const { email, password } = req.body;
 	// console.log({ email, password });
 	//server side check for null values
@@ -78,20 +81,23 @@ router.post("/login", async (req, res) => {
 		return res.json({ status: "error", message: "Invalid form submission" });
 	}
 
-	//get user with email from db
+	//get user's _id with email from db
 	const user = await getUserByEmail(email);
 	console.log(user._id.toString());
-	//get password-bcrypted from db
+	//get encrypted password using _id from db for comparison
 	const passFromDb = user && user._id ? user.password : null;
 	if (!passFromDb) {
 		return res.json({ status: "error", message: "invalid email or password" });
 	}
 	//compare with db- comparePassword func from bcrypt
 	const result = await comparePassword(password, passFromDb);
+
 	if (!result) {
+		//returns false
 		return res.json({ status: "error", message: "invalid email or password" });
 	}
-	//create AUTH TOKENS
+
+	//else create AUTH TOKENS
 	const accessJWT = await createAccessJWT(user.email, `${user._id}`);
 	const refreshJWT = await createRefreshJWT(user.email, `${user._id}`);
 	//send tokens to user
@@ -105,7 +111,7 @@ router.post("/login", async (req, res) => {
 
 //reset password
 // A. Create and send password reset pin number
-router.post("/reset-password", resetPassReqValidation, async (req, res) => {
+router.post("/reset-password", emailValidation, async (req, res) => {
 	// 1.Receive email
 	const { email } = req.body;
 	// 2. check if user exists in db using email
@@ -143,7 +149,7 @@ router.patch("/reset-password", updatePassReqValidation, async (req, res) => {
 	// 2. validate pin
 	if (getPin && getPin._id) {
 		const dbDate = getPin.addedAt;
-		const expiresIn = 1;
+		const expiresIn = process.env.EXPIRY_DATE_PIN;
 
 		let expDate = dbDate.setDate(dbDate.getDate() + expiresIn);
 		const today = new Date();
@@ -175,7 +181,21 @@ router.patch("/reset-password", updatePassReqValidation, async (req, res) => {
 	});
 });
 
-// C. Server side form validation
-// 1. create middleware to validate form data
+router.delete("/logout", userAuthorization, async (req, res) => {
+	const { authorization } = req.headers;
+	//this data coming from database
+	const _id = req.userId;
+	console.log(_id);
+
+	//2.delete accessJWT from redis database
+	deleteJWT(authorization);
+
+	//3.delete refreshJWT from mongoDB
+	const result = await storeUserRefreshJWT(_id, "");
+
+	if (result._id) {
+		return res.json({ status: "success", message: "Logged out successfully" });
+	}
+});
 
 module.exports = router;
