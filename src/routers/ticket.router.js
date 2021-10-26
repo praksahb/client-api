@@ -1,7 +1,11 @@
 const express = require("express");
 const { userAuthorization } = require("../middleware/Authorization.middleware");
 const router = express.Router();
-const { insertTicket } = require("../model/ticket/Ticket.model");
+const {
+	insertTicket,
+	getTickets,
+	getTicketById,
+} = require("../model/ticket/Ticket.model");
 
 //Workflow--
 //authorize every request with jwt
@@ -46,6 +50,37 @@ router.post("/", userAuthorization, async (req, res) => {
 			status: "error",
 			message: "Unable to create the ticket, please try again later",
 		});
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+///GET all tickets for a specific user
+router.get("/", userAuthorization, async (req, res) => {
+	//receive new ticket data
+	try {
+		const userId = req.userId;
+
+		const result = await getTickets(userId);
+
+		return res.json({
+			status: "success",
+			result,
+		});
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+//get a specific ticket
+router.get("/:_id", userAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+		const clientId = req.userId;
+
+		const result = await getTicketById(_id, clientId);
+
+		return res.json({ status: "success", result });
 	} catch (error) {
 		res.json({ status: "error", message: error.message });
 	}
