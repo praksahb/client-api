@@ -1,4 +1,5 @@
 const express = require("express");
+const { userAuthorization } = require("../middleware/Authorization.middleware");
 const router = express.Router();
 const { insertTicket } = require("../model/ticket/Ticket.model");
 
@@ -16,13 +17,14 @@ router.all("/", (req, res, next) => {
 });
 
 //create new ticket
-router.post("/", async (req, res) => {
+router.post("/", userAuthorization, async (req, res) => {
 	//receive new ticket data
 	try {
 		const { subject, sender, message } = req.body;
 
+		const userId = req.userId;
 		const ticketObj = {
-			clientId: "617610223eb594c2325bfc9f", //TODO get clientID from using accessjwt
+			clientId: userId, //TODO get clientID from using accessjwt
 			subject,
 			conversations: [
 				{
