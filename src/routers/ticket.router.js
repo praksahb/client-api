@@ -5,6 +5,9 @@ const {
 	insertTicket,
 	getTickets,
 	getTicketById,
+	addTicketReply,
+	updateStatusToClose,
+	deleteTicket,
 } = require("../model/ticket/Ticket.model");
 
 //Workflow--
@@ -81,6 +84,68 @@ router.get("/:_id", userAuthorization, async (req, res) => {
 		const result = await getTicketById(_id, clientId);
 
 		return res.json({ status: "success", result });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+//Update a specific ticket - allows client to add reply to the ticket
+router.put("/:_id", userAuthorization, async (req, res) => {
+	try {
+		const { message, sender } = req.body;
+		const { _id } = req.params;
+		const clientId = req.userId;
+
+		const result = await addTicketReply({ _id, clientId, message, sender });
+
+		if (result._id) {
+			return res.json({
+				status: "success",
+				message: "message updated successfully",
+			});
+		}
+
+		res.json({ status: "error", message: "unable to update message" });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+//Update ticket status to close
+router.patch("/close-ticket/:_id", userAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+		const clientId = req.userId;
+
+		const result = await updateStatusToClose({ _id, clientId });
+
+		if (result._id) {
+			return res.json({
+				status: "success",
+				message: "The ticket has been closed",
+			});
+		}
+
+		res.json({ status: "error", message: "unable to update message" });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+//DELETE ticket
+router.delete("/:_id", userAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+		const clientId = req.userId;
+
+		const result = await deleteTicket({ _id, clientId });
+
+		if (result._id) {
+			return res.json({
+				status: "success",
+				message: "The ticket has been deleted forever",
+			});
+		}
 	} catch (error) {
 		res.json({ status: "error", message: error.message });
 	}
