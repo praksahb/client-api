@@ -9,7 +9,7 @@ const phone = Joi.number().min(1000000000).max(9999999999).required();
 const newPassword = Joi.string().min(3).max(30).required();
 const shortStr = Joi.string().min(2).max(50);
 const longStr = Joi.string().min(2).max(1000);
-//const dt = Joi.date();
+const dt = Joi.date();
 
 const signUpDataValidation = (req, res, next) => {
 	//function to check sign- up details validation
@@ -59,7 +59,9 @@ const createNewTicketValidation = (req, res, next) => {
 		subject: shortStr.required(),
 		sender: shortStr.required(),
 		message: longStr.required(),
+		issueDate: dt.required(),
 	});
+	console.log(req.body);
 	const value = schema.validate(req.body);
 	if (value.error) {
 		return res.json({ status: "error", message: value.error.message });

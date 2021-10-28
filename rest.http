@@ -4,12 +4,12 @@ POST http://localhost:3001/v1/user
 Content-Type: application/json
 
 {
-    "name": "Charles Sobhraj",
-    "company": "diamonds pvt Ltd.",
-    "address": "Chor vilas,Lamba Ghar",
-    "phone": "8930245099",
-    "email": "rasta2@lasta.com",
-    "password": "friendlyfire_123"
+    "name": "Charlie",
+    "company": "d sompany",
+    "address": "Chor vilas,Lamba Ghar.",
+    "phone": "8930240000",
+    "email": "ghoda@flora.com",
+    "password": "friendly_123"
 }
 
 ###login authorization POST request
@@ -18,8 +18,8 @@ POST http://localhost:3001/v1/user/login
 Content-Type: application/json
 
 {
-    "email": "rasta2@lasta.com",
-    "password": "friendlyfire_123"
+    "email": "rasta3@lasta.com",
+    "password": "friendly_123"
 }
 
 ### GET request user profile - endpoint
@@ -31,7 +31,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhMkBsYXN0
 ### authentication? GET refresh token request - once logged in, user can use refresh token for 30days
 
 GET http://localhost:3001/v1/tokens/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhMkBsYXN0YS5jb20iLCJpYXQiOjE2MzUxMjUxNjksImV4cCI6MTYzNzcxNzE2OX0.iNfhlm1Me1i7rS-N8Mt9sulH4ep8bWlxV0f2ob9kdDY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzUxMzA3ODEsImV4cCI6MTYzNTEzMTY4MX0.kbEJQ3Qv5cJ_ypnsNjRCcUqInTsFn-kwpUJxaM8IscY
 
 ###reset password POST request API to receive reset password pin on email
 
@@ -39,7 +39,7 @@ POST http://localhost:3001/v1/user/reset-password
 Content-Type: application/json
 
 {
-    "email": "rasta2@lasta.com"
+    "email": "ghoda@flora.com"
 }
 
 ###Update new password using pin sent to email - endpoint
@@ -48,7 +48,58 @@ PATCH http://localhost:3001/v1/user/reset-password
 Content-Type: application/json
 
 {
-    "email": "rasta2@lasta.com",
-    "pin":  "241096",
+    "email": "ghoda@flora.com",
+    "pin":  "105971",
     "newPassword": "pass123"
 }
+
+### user logout endpoint 
+
+DELETE http://localhost:3001/v1/user/logout
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzUxMzA3ODEsImV4cCI6MTYzNTEzMTY4MX0.kbEJQ3Qv5cJ_ypnsNjRCcUqInTsFn-kwpUJxaM8IscY
+
+### Ticket APIs
+
+###Open new ticket
+
+POST localhost:3001/v1/ticket
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM1MjI4NTQ2LCJleHAiOjE2MzUyMjk0NDZ9.1F09ZRgQKSN7VuEmpB73ESy-UqQORLdThBlH-ZkZkVU
+Content-Type: application/json
+
+{
+    "subject": "343",
+    "sender": "MREP MREP",
+    "message": "Contact form not working, please fix"
+}
+
+###GET all tickets
+
+GET localhost:3001/v1/ticket
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM1MjI4NTQ2LCJleHAiOjE2MzUyMjk0NDZ9.1F09ZRgQKSN7VuEmpB73ESy-UqQORLdThBlH-ZkZkVU
+
+### GET single ticket
+
+GET localhost:3001/v1/ticket/61774f47b1f25cbf4b733e6c
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM1MjE5Mjc1LCJleHAiOjE2MzUyMjAxNzV9.jkZELbRDwGcnBJADx1kniofZdFtIV0Cre3He6LCQMAs
+
+### REPLY-UPDATE message to the ticket
+
+PUT localhost:3001/v1/ticket/61779bba533ff2f30a8d156e
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM1MjE5Mjc1LCJleHAiOjE2MzUyMjAxNzV9.jkZELbRDwGcnBJADx1kniofZdFtIV0Cre3He6LCQMAs
+Content-Type: application/json
+
+{
+    "subject": "3rd change testing confirmed changes",
+    "sender": "MR4444P",
+    "message": "Re-Confirming testing new message received to ticket"
+}
+
+### CLOSE the ticket
+
+PATCH localhost:3001/v1/ticket/close-ticket/61776e7692ea535dec8de8b2
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM1MjE5Mjc1LCJleHAiOjE2MzUyMjAxNzV9.jkZELbRDwGcnBJADx1kniofZdFtIV0Cre3He6LCQMAs
+
+###DELETE the ticket
+
+DELETE localhost:3001/v1/ticket/61774efbb1f25cbf4b733e67
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzUyMjA0NzcsImV4cCI6MTYzNTIyMTM3N30.qgToDeKhbXErfMXWhFjP91xzWC8s16cam594nOomXaU

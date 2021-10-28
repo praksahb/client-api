@@ -42,7 +42,14 @@ router.get("/", userAuthorization, async (req, res) => {
 	const _id = req.userId;
 	const userProfile = await getUserById(_id);
 	//4. get user profile based on the user id
-	res.json({ user: userProfile });
+	const { name, email } = userProfile;
+	res.json({
+		user: {
+			_id,
+			name,
+			email,
+		},
+	});
 });
 
 //Create new user route
@@ -83,7 +90,7 @@ router.post("/login", async (req, res) => {
 
 	//get user's _id with email from db
 	const user = await getUserByEmail(email);
-	console.log(user._id.toString());
+	//console.log(user._id.toString());
 	//get encrypted password using _id from db for comparison
 	const passFromDb = user && user._id ? user.password : null;
 	if (!passFromDb) {
