@@ -8,6 +8,7 @@ const {
 	getUserById,
 	updatePassword,
 	storeUserRefreshJWT,
+	verifyUser,
 } = require("../model/user/User.model");
 const {
 	hashPassword,
@@ -27,6 +28,9 @@ const {
 	signUpDataValidation,
 } = require("../middleware/formValidation.middleware");
 const { deleteJWT } = require("../helpers/redis.helper");
+
+const frontEndURL = "http://localhost:3000/";
+const verifyURL = frontEndURL + "verification/";
 
 router.all("/", (req, res, next) => {
 	//below line if uncommented creates ERR_HTTP_HEADERS sent- multiple headers due to res.json
@@ -52,7 +56,27 @@ router.get("/", userAuthorization, async (req, res) => {
 	});
 });
 
-//Create new user route
+//verify user after user has signedup
+router.patch("/verify", async (req, res) => {
+	try {
+		const { _id, email } = req.body;
+		//update our users collection in db
+		const result = await verifyUser(_id, email);
+		console.log(result);
+		if (result && result._id) {
+			return res.json({
+				status: "success",
+				message: "Your account has been verified please sign in to continue",
+			});
+		}
+		return res.json({ status: "error", message: "invalid request" });
+	} catch (error) {
+		console.log(error.message);
+		res.json({ status: "error", message: "invalid request" });
+	}
+});
+
+//Create-- new user --router
 router.post("/", signUpDataValidation, async (req, res) => {
 	const { name, company, address, phone, email, password } = req.body;
 
@@ -70,6 +94,13 @@ router.post("/", signUpDataValidation, async (req, res) => {
 		const result = await insertUser(newUserObj);
 		console.log(result);
 
+		//send verification email
+		await emailProcessor({
+			email,
+			type: "new-user-confirmation-required",
+			verificationLink: verifyURL + result._id + "/" + email,
+		});
+
 		res.json({ status: "success", message: "New user created", result });
 	} catch (error) {
 		console.log(error);
@@ -78,7 +109,7 @@ router.post("/", signUpDataValidation, async (req, res) => {
 	}
 });
 
-//user sign in router
+//user LOGIN sign in router
 router.post("/login", async (req, res) => {
 	console.log(req.body);
 	//USER email AUTHentication via bcrypt
@@ -91,6 +122,12 @@ router.post("/login", async (req, res) => {
 
 	//get user's _id with email from db
 	const user = await getUserByEmail(email);
+
+	//check if acc is verified
+	if (!user.isVerified) {
+		return res.json({ status: "error", message: "pls verify acc first" });
+	}
+
 	//console.log(user._id.toString());
 	//get encrypted password using _id from db for comparison
 	const passFromDb = user && user._id ? user.password : null;
@@ -161,6 +198,7 @@ router.patch("/reset-password", updatePassReqValidation, async (req, res) => {
 
 		let expDate = dbDate.setDate(dbDate.getDate() + expiresIn);
 		const today = new Date();
+		error.message;
 
 		if (today > expDate) {
 			return res.json({ status: "error", message: "Invalid or expired pin" });

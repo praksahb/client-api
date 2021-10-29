@@ -30,7 +30,7 @@ const send = (info) => {
 	});
 };
 
-const emailProcessor = ({ email, pin, type }) => {
+const emailProcessor = ({ email, pin, type, verificationLink = "" }) => {
 	//email body - function to send info to email
 	let emailInfo = "";
 	switch (type) {
@@ -52,14 +52,15 @@ const emailProcessor = ({ email, pin, type }) => {
 			send(emailInfo);
 			break;
 		case "password-update-success":
+		case "new-user-confirmation-required":
 			emailInfo = {
 				from: '"CRM Company" <emilio.streich35@ethereal.email>', // sender address
 				to: email, // list of receivers
-				subject: "Password updated", // Subject line
-				text: "Your new password has been updated", // plain text body
+				subject: "Please verify email, new user", // Subject line
+				text: "Please follow the link to verify your account, once verified you can login access the account", // plain text body
 				html: `<b>Hello </b>
-          <p>Your new password
-          has been updated</p>`, // html body
+          <p>Please follow the link to verify your account, once verified you can login access the account</p> 
+					<p>${verificationLink}</p>`, // html body
 			};
 
 			send(emailInfo);
