@@ -70,10 +70,11 @@ router.post("/", signUpDataValidation, async (req, res) => {
 		const result = await insertUser(newUserObj);
 		console.log(result);
 
-		res.json({ message: "New user created", result });
+		res.json({ status: "success", message: "New user created", result });
 	} catch (error) {
 		console.log(error);
-		res.json({ status: "error", message: error.message });
+		let message = "Unable to create new user at the moment Please try later";
+		res.json({ status: "error", /* message: error.*/ message });
 	}
 });
 
