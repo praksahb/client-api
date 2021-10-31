@@ -1,15 +1,26 @@
 const express = require("express");
+const router = express.Router();
+
 const { hashPassword, comparePassword } = require("../helpers/bcrypt.helper");
 const { createAccessJWT, createRefreshJWT } = require("../helpers/jwt.helper");
-const router = express.Router();
 
 const {
 	insertAdmin,
 	getAdminIdByEmail,
+	getAdminById,
+	storeAdminRefreshJWT,
 } = require("../model/admin/Admin.model");
 
+const { getAllTicketsByStatus } = require("../model/ticket/Ticket.model");
+
+const {
+	adminSignupValidation,
+} = require("../middleware/formValidation.middleware");
+const { userAuthorization } = require("../middleware/Authorization.middleware");
+const { deleteJWT } = require("../helpers/redis.helper");
+
 //create one admin atleast --- POST route
-router.post("/signup", async (req, res) => {
+router.post("/signup", adminSignupValidation, async (req, res) => {
 	const { name, email, password, phone, dob, address } = req.body;
 
 	try {
@@ -32,6 +43,7 @@ router.post("/signup", async (req, res) => {
 	}
 });
 
+//ADMIN AUTHENTICATION ROUTES
 //admin login --- POST route
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
@@ -69,6 +81,44 @@ router.post("/login", async (req, res) => {
 		accessJWT,
 		refreshJWT,
 	});
+});
+
+//get admin home page
+router.get("/", userAuthorization, async (req, res) => {
+	const _id = req.userId;
+	const adminProfile = await getAdminById(_id);
+
+	const { name, email } = adminProfile;
+
+	res.json({ user: { _id, name, email } });
+});
+
+//manual logout delete request
+router.delete("/logout", userAuthorization, async (req, res) => {
+	const { authorization } = req.headers;
+
+	console.log(req.userId);
+	const _id = req.userId;
+
+	deleteJWT(authorization);
+	const result = await storeAdminRefreshJWT(_id, "");
+	if (result._id) {
+		return res.json({ status: "success", message: "logged out successfully" });
+	}
+});
+
+//ADMIN  TICKETs ROUTES
+
+//get all tickets according to status --- can be changed to get all ticekts by status
+router.get("/find-tickets", userAuthorization, async (req, res) => {
+	try {
+		const { status } = req.body;
+
+		const result = await getAllTicketsByStatus(status);
+		return res.json({ status: "success", result });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
 });
 
 module.exports = router;

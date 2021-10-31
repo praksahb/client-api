@@ -14,6 +14,19 @@ const insertTicket = (ticketObj) => {
 	});
 };
 
+const getAllTicketsByStatus = (status) => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.find({ status })
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			//console.log(error);
+			reject(error);
+		}
+	});
+};
+
 const getTickets = (clientId) => {
 	return new Promise((resolve, reject) => {
 		try {
@@ -101,4 +114,5 @@ module.exports = {
 	addTicketReply,
 	updateStatusToClose,
 	deleteTicket,
+	getAllTicketsByStatus,
 };

@@ -33,6 +33,10 @@ const AdminSchema = new Schema({
 		required: true,
 		maxlength: 100,
 	},
+	// adminRole: {
+	// 	type: String,
+	// 	default: "employee",
+	// },
 });
 
 module.exports = {

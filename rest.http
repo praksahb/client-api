@@ -105,7 +105,7 @@ DELETE localhost:3001/v1/ticket/61774efbb1f25cbf4b733e67
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzUyMjA0NzcsImV4cCI6MTYzNTIyMTM3N30.qgToDeKhbXErfMXWhFjP91xzWC8s16cam594nOomXaU
 
 
-### ADMIN routes
+### ADMIN AUTH routes
 
 ###create one admin minimum
 
@@ -114,17 +114,39 @@ Content-Type: application/json
 
 {
     "name": "Admin man",
-    "dob": "Sun Nov 26 1995",
+    "dob": "1992-11-26",
     "address": "Chor vilas,Lamba Ghar.",
     "phone": "8930240000",
-    "email": "ghodas@flora.com",
+    "email": "ghodas3@flora.com",
     "password": "friendly_123"
 }
 
+### login admin 
+
 POST http://localhost:3001/v1/admin/login
-Content-Type: application/application/json
+Content-Type: application/json
 
 {
     "email": "ghodas@flora.com",
     "password": "friendly_123"
+}
+
+### GET request admin profile - endpoint
+
+GET http://localhost:3001/v1/admin
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2Rhc0BmbG9yYS5jb20iLCJpYXQiOjE2MzU2NjM0MDgsImV4cCI6MTYzNTY2NDMwOH0.kwbDQ9-XkCoS0wShCg6V--pEmOBMi1PFwmVxZRwt7_s
+
+### admin logout endpoint 
+
+DELETE http://localhost:3001/v1/admin/logout
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2Rhc0BmbG9yYS5jb20iLCJpYXQiOjE2MzU2NjM1NDIsImV4cCI6MTYzNTY2NDQ0Mn0.CK-9wMTaT8hthZfSiHRohnNmCgBR8VXZP1iX0xcqkLI
+
+### ticket routes 
+
+GET http://localhost:3001/v1/admin/find-tickets
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2Rhc0BmbG9yYS5jb20iLCJpYXQiOjE2MzU2NjY5NzIsImV4cCI6MTYzNTY2Nzg3Mn0.IWG_HJUmHBbPH81KOmG2CahpLf8AvR5i4CO5b4kDqAU
+Content-Type: application/json
+
+{
+    "status": "Closed"
 }
