@@ -8,7 +8,7 @@ Content-Type: application/json
     "company": "d sompany",
     "address": "Chor vilas,Lamba Ghar.",
     "phone": "8930240000",
-    "email": "ghoda@flora.com",
+    "email": "ghodas@flora.com",
     "password": "friendly_123"
 }
 
@@ -31,7 +31,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhMkBsYXN0
 ### authentication? GET refresh token request - once logged in, user can use refresh token for 30days
 
 GET http://localhost:3001/v1/tokens/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzUxMzA3ODEsImV4cCI6MTYzNTEzMTY4MX0.kbEJQ3Qv5cJ_ypnsNjRCcUqInTsFn-kwpUJxaM8IscY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzU2NDA0NDUsImV4cCI6MTYzODIzMjQ0NX0.FhjYYCLAnUQQt9y90X34F-oBgiUrzAfSdurAJaMezE4
 
 ###reset password POST request API to receive reset password pin on email
 
@@ -103,3 +103,28 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwu
 
 DELETE localhost:3001/v1/ticket/61774efbb1f25cbf4b733e67
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzUyMjA0NzcsImV4cCI6MTYzNTIyMTM3N30.qgToDeKhbXErfMXWhFjP91xzWC8s16cam594nOomXaU
+
+
+### ADMIN routes
+
+###create one admin minimum
+
+POST http://localhost:3001/v1/admin/signup
+Content-Type: application/json
+
+{
+    "name": "Admin man",
+    "dob": "Sun Nov 26 1995",
+    "address": "Chor vilas,Lamba Ghar.",
+    "phone": "8930240000",
+    "email": "ghodas@flora.com",
+    "password": "friendly_123"
+}
+
+POST http://localhost:3001/v1/admin/login
+Content-Type: application/application/json
+
+{
+    "email": "ghodas@flora.com",
+    "password": "friendly_123"
+}
