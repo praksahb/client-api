@@ -73,7 +73,7 @@ const createNewTicketValidation = (req, res, next) => {
 
 const replyTicketMessageValidation = (req, res, next) => {
 	const schema = Joi.object({
-		sender: shortStr,
+		sender: shortStr.required(),
 		message: longStr.required(),
 	});
 	const value = schema.validate(req.body);

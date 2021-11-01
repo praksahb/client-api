@@ -17,13 +17,12 @@ const {
 const {
 	getAllTicketsByStatus,
 	getAllTickets4admin,
-	addTicketReply,
 	addTicketReplyFromAdmin,
 } = require("../model/ticket/Ticket.model");
 
 const {
 	adminSignupValidation,
-	replyTicketMessageValidation,
+	replyTicketMessageValidationFromEmployee,
 } = require("../middleware/formValidation.middleware");
 const {
 	userAuthorization,
@@ -159,24 +158,23 @@ router.get(
 
 //get all employees- including admin from admins db collection
 
-//assign ticket to employee id
+//assign ticket to employee id--- add workedById to ticket
 
 //update ticket --- send a reply resolution
 router.put(
 	"/ticket/:_id",
-	replyTicketMessageValidation,
+	replyTicketMessageValidationFromEmployee,
 	userAuthorization,
 	employeeAuthorization,
 	async (req, res) => {
 		try {
-			console.log(req.employee);
 			const { message } = req.body;
 			const sender = req.employee.name;
-			console.log(sender);
+			// console.log(sender);
 			const { _id } = req.params;
-			console.log("ticket id: ", _id);
+			// console.log("ticket id: ", _id);
 			const workedById = req.userId;
-			console.log("workerid: ", workedById);
+			// console.log("workerid: ", workedById);
 
 			const result = await addTicketReplyFromAdmin({
 				_id,
