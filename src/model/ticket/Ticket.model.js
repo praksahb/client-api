@@ -14,19 +14,6 @@ const insertTicket = (ticketObj) => {
 	});
 };
 
-const getAllTicketsByStatus = (status) => {
-	return new Promise((resolve, reject) => {
-		try {
-			TicketSchema.find({ status })
-				.then((data) => resolve(data))
-				.catch((error) => reject(error));
-		} catch (error) {
-			//console.log(error);
-			reject(error);
-		}
-	});
-};
-
 const getTickets = (clientId) => {
 	return new Promise((resolve, reject) => {
 		try {
@@ -107,6 +94,59 @@ const deleteTicket = ({ _id, clientId }) => {
 	});
 };
 
+//ADMIN -- EMPLOYEE functions
+
+//1. get tickets according to status--- better to call all tickets and
+//handle by status in frontend using react
+const getAllTicketsByStatus = (status) => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.find({ status })
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			//console.log(error);
+			reject(error);
+		}
+	});
+};
+//2. get all tickets
+const getAllTickets4admin = () => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.find({})
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			//console.log(error);
+			reject(error);
+		}
+	});
+};
+
+//ticket response
+const addTicketReplyFromAdmin = ({ _id, workedById, message, sender }) => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.findOneAndUpdate(
+				{ _id, workedById },
+				{
+					status: "pending client response",
+					$push: {
+						conversations: { message, sender },
+					},
+				},
+				{ new: true }
+			)
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+};
+
 module.exports = {
 	insertTicket,
 	getTickets,
@@ -115,4 +155,6 @@ module.exports = {
 	updateStatusToClose,
 	deleteTicket,
 	getAllTicketsByStatus,
+	getAllTickets4admin,
+	addTicketReplyFromAdmin,
 };

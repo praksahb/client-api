@@ -33,10 +33,22 @@ const AdminSchema = new Schema({
 		required: true,
 		maxlength: 100,
 	},
-	// adminRole: {
-	// 	type: String,
-	// 	default: "employee",
-	// },
+	refreshJWT: {
+		token: {
+			type: String,
+			maxLength: 500,
+			default: "",
+		},
+		addedAt: {
+			type: Date,
+			required: true,
+			default: Date.now(),
+		},
+	},
+	role: {
+		type: String,
+		default: "employee",
+	},
 });
 
 module.exports = {

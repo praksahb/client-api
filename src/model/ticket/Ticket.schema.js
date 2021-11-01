@@ -5,6 +5,9 @@ const TicketSchema = new Schema({
 	clientId: {
 		type: Schema.Types.ObjectId,
 	},
+	workedById: {
+		type: Schema.Types.ObjectId,
+	},
 	subject: {
 		type: String,
 		maxLength: 100,

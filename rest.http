@@ -127,26 +127,33 @@ POST http://localhost:3001/v1/admin/login
 Content-Type: application/json
 
 {
-    "email": "ghodas@flora.com",
+    "email": "ghodas3@flora.com",
     "password": "friendly_123"
 }
 
 ### GET request admin profile - endpoint
 
 GET http://localhost:3001/v1/admin
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2Rhc0BmbG9yYS5jb20iLCJpYXQiOjE2MzU2NjM0MDgsImV4cCI6MTYzNTY2NDMwOH0.kwbDQ9-XkCoS0wShCg6V--pEmOBMi1PFwmVxZRwt7_s
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1NjgyNTMxLCJleHAiOjE2MzU2ODM0MzF9.zKKS-xcjEaaDE3b5gfFIcu0U1tg7a4V1MCW5wWIZtFw
 
 ### admin logout endpoint 
 
 DELETE http://localhost:3001/v1/admin/logout
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2Rhc0BmbG9yYS5jb20iLCJpYXQiOjE2MzU2NjM1NDIsImV4cCI6MTYzNTY2NDQ0Mn0.CK-9wMTaT8hthZfSiHRohnNmCgBR8VXZP1iX0xcqkLI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1NjgyOTI1LCJleHAiOjE2MzU2ODM4MjV9.0n6kgTzphcVHAbbpIxnMuQXe0u8pLdXhy_EgsqynfWI
 
 ### ticket routes 
 
+###get all tickets
+
+GET http://localhost:3001/v1/admin/all-tickets
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1Njg3MzQwLCJleHAiOjE2MzU2ODgyNDB9.DW7RTdDgvlfXfCz2G6ru23rDDQvrT3YhSiDcdc-T6OY
+
+###get tickets according to status
+
 GET http://localhost:3001/v1/admin/find-tickets
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2Rhc0BmbG9yYS5jb20iLCJpYXQiOjE2MzU2NjY5NzIsImV4cCI6MTYzNTY2Nzg3Mn0.IWG_HJUmHBbPH81KOmG2CahpLf8AvR5i4CO5b4kDqAU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1Njg1NjM1LCJleHAiOjE2MzU2ODY1MzV9.vzY41lFZV9-fUpocJ1Lwg-jgFD-ryqUvFAQ8zbf-H8s
 Content-Type: application/json
 
 {
-    "status": "Closed"
+    "status": "pending operator response"
 }
