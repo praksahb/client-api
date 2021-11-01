@@ -18,6 +18,7 @@ const {
 	getAllTicketsByStatus,
 	getAllTickets4admin,
 	addTicketReplyFromAdmin,
+	addEmpOnTicket,
 } = require("../model/ticket/Ticket.model");
 
 const {
@@ -159,6 +160,32 @@ router.get(
 //get all employees- including admin from admins db collection
 
 //assign ticket to employee id--- add workedById to ticket
+router.put(
+	"/all-tickets/:_id",
+	userAuthorization,
+	employeeAuthorization,
+	async (req, res) => {
+		try {
+			const { _id } = req.params;
+			console.log(req.employee);
+			const workedById = req.employee._id;
+
+			const result = await addEmpOnTicket({ _id, workedById });
+			if (result._id) {
+				return res.json({
+					status: "success",
+					message: "added employee to ticket",
+				});
+			}
+			res.json({
+				status: "error",
+				message: "unable to add employee to ticket",
+			});
+		} catch (error) {
+			res.json({ status: "error", message: error.message });
+		}
+	}
+);
 
 //update ticket --- send a reply resolution
 router.put(
@@ -170,6 +197,7 @@ router.put(
 		try {
 			const { message } = req.body;
 			const sender = req.employee.name;
+			//const {sender: name} = req.employee;
 			// console.log(sender);
 			const { _id } = req.params;
 			// console.log("ticket id: ", _id);
@@ -182,7 +210,7 @@ router.put(
 				message,
 				sender,
 			});
-
+			console.log("result:", result);
 			if (result._id) {
 				return res.json({
 					status: "success",

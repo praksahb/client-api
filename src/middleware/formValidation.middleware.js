@@ -61,7 +61,6 @@ const createNewTicketValidation = (req, res, next) => {
 		subject: shortStr.required(),
 		sender: shortStr.required(),
 		message: longStr.required(),
-		// issueDate: date.required(),
 	});
 	console.log(req.body);
 	const value = schema.validate(req.body);
@@ -101,6 +100,18 @@ const adminSignupValidation = (req, res, next) => {
 	next();
 };
 
+const replyTicketMessageValidationFromEmployee = (req, res, next) => {
+	const schema = Joi.object({
+		sender: shortStr,
+		message: longStr.required(),
+	});
+	const value = schema.validate(req.body);
+	if (value.error) {
+		return res.json({ status: "error", message: value.error.message });
+	}
+	next();
+};
+
 module.exports = {
 	emailValidation,
 	updatePassReqValidation,
@@ -108,4 +119,5 @@ module.exports = {
 	createNewTicketValidation,
 	replyTicketMessageValidation,
 	adminSignupValidation,
+	replyTicketMessageValidationFromEmployee,
 };

@@ -147,6 +147,19 @@ const addTicketReplyFromAdmin = ({ _id, workedById, message, sender }) => {
 	});
 };
 
+const addEmpOnTicket = ({ _id, workedById }) => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.findOneAndUpdate({ _id }, { workedById }, { new: true })
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+};
+
 module.exports = {
 	insertTicket,
 	getTickets,
@@ -157,4 +170,5 @@ module.exports = {
 	getAllTicketsByStatus,
 	getAllTickets4admin,
 	addTicketReplyFromAdmin,
+	addEmpOnTicket,
 };
