@@ -26,20 +26,21 @@ const userAuthorization = async (req, res, next) => {
 	return res.status(403).json({ message: "forbidden - auth failed" });
 };
 
+//create NEW employee AUTH middleware
 const employeeAuthorization = async (req, res, next) => {
-	const adminId = req.userId;
-	const checkId = await getAdminById(adminId);
-	//console.log("checkID: ", checkId);
-	if (!checkId) {
-		return res
-			.status(403)
-			.json({ message: "forbidden failed to authenticate" });
-	}
-	if (checkId.role === "employee" || checkId.role === "admin") {
-		req.employee = checkId;
-		return next();
-	}
-	return res.status(403).json({ message: "forbidden authentication failure" });
+	// 	const adminId = req.userId;
+	// 	const checkId = await getAdminById(adminId);
+	// 	//console.log("checkID: ", checkId);
+	// 	if (!checkId) {
+	// 		return res
+	// 			.status(403)
+	// 			.json({ message: "forbidden failed to authenticate" });
+	// 	}
+	// 	if (checkId.role === "employee" || checkId.role === "admin") {
+	// 		req.employee = checkId;
+	// 		return next();
+	// 	}
+	// 	return res.status(403).json({ message: "forbidden authentication failure" });
 };
 
 const adminAuthorization = async (req, res, next) => {
@@ -51,10 +52,10 @@ const adminAuthorization = async (req, res, next) => {
 			.status(403)
 			.json({ message: "forbidden failed to authenticate" });
 	}
-	if (checkId.role === "admin") {
-		req.admin = checkId;
-		return next();
-	}
+	// if (checkId.role === "admin") {
+	req.admin = checkId;
+	return next();
+	// }
 	return res.status(403).json({ message: "forbidden authentication failure" });
 };
 

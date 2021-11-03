@@ -124,7 +124,7 @@ const getAllTickets4admin = () => {
 	});
 };
 
-//ticket response
+//ticket response change or create new for employee
 const addTicketReplyFromAdmin = ({ _id, workedById, message, sender }) => {
 	return new Promise((resolve, reject) => {
 		try {

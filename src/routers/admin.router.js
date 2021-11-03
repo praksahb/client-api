@@ -100,9 +100,9 @@ router.get("/", userAuthorization, employeeAuthorization, async (req, res) => {
 	const _id = req.userId;
 	const adminProfile = await getAdminById(_id);
 
-	const { name, email, role } = adminProfile;
+	const { name, email } = adminProfile;
 
-	res.json({ user: { _id, name, email, role } });
+	res.json({ user: { _id, name, email } });
 });
 
 //manual logout delete request
@@ -156,8 +156,10 @@ router.get(
 );
 
 //get all users-- clients
+//create method in user.model to fetch all users
 
 //get all employees- including admin from admins db collection
+//create method in admin.model to fetch all admin/employees
 
 //assign ticket to employee id--- add workedById to ticket
 router.put(

@@ -62,13 +62,13 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0
 
 ###Open new ticket
 
-POST localhost:3001/v1/ticket
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5cmFAZ21haWwuY29tIiwiaWF0IjoxNjM1MjI4NTQ2LCJleHAiOjE2MzUyMjk0NDZ9.1F09ZRgQKSN7VuEmpB73ESy-UqQORLdThBlH-ZkZkVU
+POST http://localhost:3001/v1/ticket/
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhc3RhM0BsYXN0YS5jb20iLCJpYXQiOjE2MzU3ODIwMTcsImV4cCI6MTYzNTc4MjkxN30.JKGMMzeP8LdzwkYPg_d0vm2UlJsDApBv-b3QFC0pA8M
 Content-Type: application/json
 
 {
-    "subject": "343",
-    "sender": "MREP MREP",
+    "subject": "Roger That",
+    "sender": "whodis",
     "message": "Contact form not working, please fix"
 }
 
@@ -117,7 +117,7 @@ Content-Type: application/json
     "dob": "1992-11-26",
     "address": "Chor vilas,Lamba Ghar.",
     "phone": "8930240000",
-    "email": "ghodas3@flora.com",
+    "email": "ghodas2@flora.com",
     "password": "friendly_123"
 }
 
@@ -127,15 +127,14 @@ POST http://localhost:3001/v1/admin/login
 Content-Type: application/json
 
 {
-    "email": "ghodas3@flora.com",
+    "email": "ghodas2@flora.com",
     "password": "friendly_123"
 }
 
 ### GET request admin profile - endpoint
 
 GET http://localhost:3001/v1/admin
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1NjgyNTMxLCJleHAiOjE2MzU2ODM0MzF9.zKKS-xcjEaaDE3b5gfFIcu0U1tg7a4V1MCW5wWIZtFw
-
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM1NzgyMjU4LCJleHAiOjE2MzU3ODMxNTh9.mlMqons_x-PCJw8QPUcQmrgLtYBMLUQNKPW3M2nMorA
 ### admin logout endpoint 
 
 DELETE http://localhost:3001/v1/admin/logout
@@ -146,14 +145,32 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxv
 ###get all tickets
 
 GET http://localhost:3001/v1/admin/all-tickets
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1Njg3MzQwLCJleHAiOjE2MzU2ODgyNDB9.DW7RTdDgvlfXfCz2G6ru23rDDQvrT3YhSiDcdc-T6OY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM1NzgwODMyLCJleHAiOjE2MzU3ODE3MzJ9.IzlieYQnG9tFOVC4j48BkuAIqE0xW8A995LK-PEGb6U
 
 ###get tickets according to status
 
 GET http://localhost:3001/v1/admin/find-tickets
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1Njg1NjM1LCJleHAiOjE2MzU2ODY1MzV9.vzY41lFZV9-fUpocJ1Lwg-jgFD-ryqUvFAQ8zbf-H8s
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM1NzgwODMyLCJleHAiOjE2MzU3ODE3MzJ9.IzlieYQnG9tFOVC4j48BkuAIqE0xW8A995LK-PEGb6U
 Content-Type: application/json
 
 {
-    "status": "pending operator response"
+    "status": "pending response"
+}
+
+###update ticket---add employee
+
+PUT http://localhost:3001/v1/admin/all-tickets/61800e22dce11a7239eabc0c
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM1NzgyMjU4LCJleHAiOjE2MzU3ODMxNTh9.mlMqons_x-PCJw8QPUcQmrgLtYBMLUQNKPW3M2nMorA
+
+
+### update tickets employee side
+
+PUT http://localhost:3001/v1/admin/ticket/61800e22dce11a7239eabc0c
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM1NzgyMjU4LCJleHAiOjE2MzU3ODMxNTh9.mlMqons_x-PCJw8QPUcQmrgLtYBMLUQNKPW3M2nMorA
+Content-Type: application/json
+
+{
+    //"subject": "3rd change testing confirmed changes",
+    //"sender": req.employee.name,
+    "message": "lassun"
 }

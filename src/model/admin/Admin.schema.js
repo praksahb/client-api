@@ -45,10 +45,6 @@ const AdminSchema = new Schema({
 			default: Date.now(),
 		},
 	},
-	role: {
-		type: String,
-		default: "employee",
-	},
 });
 
 module.exports = {

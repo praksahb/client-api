@@ -32,7 +32,7 @@ const createRefreshJWT = async (email, _id) => {
 const createRefreshJWT4admin = async (email, _id) => {
 	try {
 		const refreshJWT = jwt.sign({ email }, process.env.JWT_REFRESH_SECRET, {
-			expiresIn: "1h",
+			expiresIn: "1d",
 		});
 		await storeAdminRefreshJWT(_id, refreshJWT);
 		return Promise.resolve(refreshJWT);

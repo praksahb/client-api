@@ -82,7 +82,7 @@ const replyTicketMessageValidation = (req, res, next) => {
 	next();
 };
 
-//admin -- employee side valdiation
+//admin  side valdiation
 
 const adminSignupValidation = (req, res, next) => {
 	const schema = Joi.object({
