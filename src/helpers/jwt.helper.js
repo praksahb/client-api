@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
-const { setJWT, getJWT } = require("./redis.helper");
+const { setJWT } = require("./redis.helper");
 const { storeUserRefreshJWT } = require("../model/user/User.model");
 const { storeAdminRefreshJWT } = require("../model/admin/Admin.model");
+const { storeEmpRefreshJWT } = require("../model/employee/Employee.model");
 
 const createAccessJWT = async (email, _id) => {
 	try {
@@ -42,6 +43,19 @@ const createRefreshJWT4admin = async (email, _id) => {
 	}
 };
 
+const createRefreshJWT4Employee = async (email, _id) => {
+	try {
+		const refreshJWT = jwt.sign({ email }, process.env.JWT_REFRESH_SECRET, {
+			expiresIn: "1d",
+		});
+		await storeEmpRefreshJWT(_id, refreshJWT);
+		return Promise.resolve(refreshJWT);
+	} catch (error) {
+		console.log(error);
+		return Promise.reject(error);
+	}
+};
+
 const verifyAccessJWT = (userJWT) => {
 	try {
 		return Promise.resolve(jwt.verify(userJWT, process.env.JWT_ACCESS_SECRET));
@@ -64,4 +78,5 @@ module.exports = {
 	verifyAccessJWT,
 	verifyRefreshJWT,
 	createRefreshJWT4admin,
+	createRefreshJWT4Employee,
 };

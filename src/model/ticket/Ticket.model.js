@@ -125,6 +125,8 @@ const getAllTickets4admin = () => {
 };
 
 //ticket response change or create new for employee
+
+//remove admin from this function and add employee to it instead
 const addTicketReplyFromAdmin = ({ _id, workedById, message, sender }) => {
 	return new Promise((resolve, reject) => {
 		try {

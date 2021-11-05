@@ -1,20 +1,21 @@
-const { AdminSchema } = require("./Admin.schema");
+const { EmployeeSchema } = require("./Employee.schema");
 
-const insertAdmin = (adminObj) => {
+//only for admins
+const insertEmployee = (empObj) => {
 	return new Promise((resolve, reject) => {
-		AdminSchema(adminObj)
+		EmployeeSchema(empObj)
 			.save()
 			.then((data) => resolve(data))
 			.catch((error) => reject(error));
 	});
 };
 
-const getAdminIdByEmail = (email) => {
+const getEmpByEmail = (email) => {
 	return new Promise((resolve, reject) => {
 		if (!email) return false;
 
 		try {
-			AdminSchema.findOne({ email }, (error, data) => {
+			EmployeeSchema.findOne({ email }, (error, data) => {
 				if (error) {
 					console.log(error);
 					reject(error);
@@ -29,12 +30,12 @@ const getAdminIdByEmail = (email) => {
 	});
 };
 
-const getAdminById = (_id) => {
+const getEmpById = (_id) => {
 	return new Promise((resolve, reject) => {
 		if (!_id) return false;
 
 		try {
-			AdminSchema.findById(_id, (error, data) => {
+			EmployeeSchema.findById(_id, (error, data) => {
 				if (error) {
 					console.log(error);
 					reject(error);
@@ -47,10 +48,10 @@ const getAdminById = (_id) => {
 	});
 };
 
-const storeAdminRefreshJWT = (_id, token) => {
+const storeEmpRefreshJWT = (_id, token) => {
 	return new Promise((resolve, reject) => {
 		try {
-			AdminSchema.findOneAndUpdate(
+			EmployeeSchema.findOneAndUpdate(
 				{ _id },
 				{
 					$set: { "refreshJWT.token": token, "refreshJWT.addedAt": Date.now() },
@@ -70,8 +71,8 @@ const storeAdminRefreshJWT = (_id, token) => {
 };
 
 module.exports = {
-	insertAdmin,
-	getAdminIdByEmail,
-	getAdminById,
-	storeAdminRefreshJWT,
+	insertEmployee,
+	getEmpByEmail,
+	getEmpById,
+	storeEmpRefreshJWT,
 };

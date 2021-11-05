@@ -27,7 +27,7 @@ const {
 } = require("../middleware/formValidation.middleware");
 const {
 	userAuthorization,
-	employeeAuthorization,
+	adminAuthorization,
 } = require("../middleware/Authorization.middleware");
 const { deleteJWT } = require("../helpers/redis.helper");
 
@@ -96,13 +96,20 @@ router.post("/login", async (req, res) => {
 });
 
 //get admin home page
-router.get("/", userAuthorization, employeeAuthorization, async (req, res) => {
-	const _id = req.userId;
-	const adminProfile = await getAdminById(_id);
-
-	const { name, email } = adminProfile;
-
-	res.json({ user: { _id, name, email } });
+router.get("/", adminAuthorization, async (req, res) => {
+	try {
+		const adminProfile = req.adminId;
+		// console.log("adminProfile: ", adminProfile);
+		if (!adminProfile) {
+			return res
+				.status(403)
+				.json({ status: "error", message: "invalid login" });
+		}
+		const { _id, name, email } = adminProfile;
+		res.json({ user: { _id, name, email } });
+	} catch (error) {
+		res.json({ status: "errror", message: error.message });
+	}
 });
 
 //manual logout delete request
@@ -124,77 +131,61 @@ router.delete("/logout", userAuthorization, async (req, res) => {
 
 //get all tickets according to status
 //can be changed to get all tickets by replies by admin id
-router.get(
-	"/find-tickets",
-	userAuthorization,
-	employeeAuthorization,
-	async (req, res) => {
-		try {
-			const { status } = req.body;
+router.get("/find-tickets", userAuthorization, async (req, res) => {
+	try {
+		const { status } = req.body;
 
-			const result = await getAllTicketsByStatus(status);
-			return res.json({ status: "success", result });
-		} catch (error) {
-			res.json({ status: "error", message: error.message });
-		}
+		const result = await getAllTicketsByStatus(status);
+		return res.json({ status: "success", result });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
 	}
-);
+});
 
 //get all tickets
-router.get(
-	"/all-tickets",
-	userAuthorization,
-	employeeAuthorization,
-	async (req, res) => {
-		try {
-			const result = await getAllTickets4admin();
-			return res.json({ status: "success", result });
-		} catch (error) {
-			res.json({ status: "error", message: error.message });
-		}
+router.get("/all-tickets", userAuthorization, async (req, res) => {
+	try {
+		const result = await getAllTickets4admin();
+		return res.json({ status: "success", result });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
 	}
-);
+});
 
-//get all users-- clients
+//get all clients
 //create method in user.model to fetch all users
 
-//get all employees- including admin from admins db collection
-//create method in admin.model to fetch all admin/employees
+//get all employees
 
 //assign ticket to employee id--- add workedById to ticket
-router.put(
-	"/all-tickets/:_id",
-	userAuthorization,
-	employeeAuthorization,
-	async (req, res) => {
-		try {
-			const { _id } = req.params;
-			console.log(req.employee);
-			const workedById = req.employee._id;
+router.put("/all-tickets/:_id", userAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+		console.log(req.employee);
+		const workedById = req.employee._id;
 
-			const result = await addEmpOnTicket({ _id, workedById });
-			if (result._id) {
-				return res.json({
-					status: "success",
-					message: "added employee to ticket",
-				});
-			}
-			res.json({
-				status: "error",
-				message: "unable to add employee to ticket",
+		const result = await addEmpOnTicket({ _id, workedById });
+		if (result._id) {
+			return res.json({
+				status: "success",
+				message: "added employee to ticket",
 			});
-		} catch (error) {
-			res.json({ status: "error", message: error.message });
 		}
+		res.json({
+			status: "error",
+			message: "unable to add employee to ticket",
+		});
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
 	}
-);
+});
 
 //update ticket --- send a reply resolution
+//migrate function to employee router-- disallow admin to reply on tickets
 router.put(
 	"/ticket/:_id",
 	replyTicketMessageValidationFromEmployee,
 	userAuthorization,
-	employeeAuthorization,
 	async (req, res) => {
 		try {
 			const { message } = req.body;

@@ -37,12 +37,14 @@ const userRouter = require("./src/routers/user.router");
 const ticketRouter = require("./src/routers/ticket.router");
 const tokenRouter = require("./src/routers/token.router");
 const adminRouter = require("./src/routers/admin.router");
+const employeeRouter = require("./src/routers/employee.router");
 
 //use Router
 app.use("/v1/user", userRouter);
 app.use("/v1/ticket", ticketRouter);
 app.use("/v1/tokens", tokenRouter);
 app.use("/v1/admin", adminRouter);
+app.use("/v1/employee", employeeRouter);
 
 //error handler
 const handleError = require("./src/utils/errorHandler");

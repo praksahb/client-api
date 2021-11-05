@@ -134,11 +134,11 @@ Content-Type: application/json
 ### GET request admin profile - endpoint
 
 GET http://localhost:3001/v1/admin
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM1NzgyMjU4LCJleHAiOjE2MzU3ODMxNTh9.mlMqons_x-PCJw8QPUcQmrgLtYBMLUQNKPW3M2nMorA
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM2MTA2NDM2LCJleHAiOjE2MzYxMDczMzZ9.y-YrPelpJejkNxO_GUvpEwV4tSlrm7EausgLOI9LWyY
 ### admin logout endpoint 
 
 DELETE http://localhost:3001/v1/admin/logout
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczNAZmxvcmEuY29tIiwiaWF0IjoxNjM1NjgyOTI1LCJleHAiOjE2MzU2ODM4MjV9.0n6kgTzphcVHAbbpIxnMuQXe0u8pLdXhy_EgsqynfWI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM2MTA2NDM2LCJleHAiOjE2MzYxMDczMzZ9.y-YrPelpJejkNxO_GUvpEwV4tSlrm7EausgLOI9LWyY
 
 ### ticket routes 
 

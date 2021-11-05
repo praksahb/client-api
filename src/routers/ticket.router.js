@@ -1,6 +1,6 @@
 const express = require("express");
-const { userAuthorization } = require("../middleware/Authorization.middleware");
 const router = express.Router();
+
 const {
 	insertTicket,
 	getTickets,
@@ -9,6 +9,7 @@ const {
 	updateStatusToClose,
 	deleteTicket,
 } = require("../model/ticket/Ticket.model");
+const { userAuthorization } = require("../middleware/Authorization.middleware");
 const {
 	createNewTicketValidation,
 	replyTicketMessageValidation,
