@@ -179,12 +179,14 @@ router.get("/all-employees", adminAuthorization, async (req, res) => {
 //assign ticket to employee id--- add workedById to ticket
 router.put("/all-tickets/:_id", adminAuthorization, async (req, res) => {
 	try {
+		//get ticket id from url params
 		const { _id } = req.params;
 
 		//get emp id from req.body
-
 		const workedById = req.body.employee._id;
 		console.log("workedById:: ", workedById);
+
+		//add emp to ticket
 		const result = await addEmpOnTicket({ _id, workedById });
 		if (result._id) {
 			return res.json({
@@ -200,43 +202,6 @@ router.put("/all-tickets/:_id", adminAuthorization, async (req, res) => {
 		res.json({ status: "error", message: error.message });
 	}
 });
-
-//update ticket --- send a reply resolution
-//migrate function to employee router-- disallow admin to reply on tickets
-router.put(
-	"/ticket/:_id",
-	replyTicketMessageValidationFromEmployee,
-	userAuthorization,
-	async (req, res) => {
-		try {
-			const { message } = req.body;
-			const sender = req.employee.name;
-			//const {sender: name} = req.employee;
-			// console.log(sender);
-			const { _id } = req.params;
-			// console.log("ticket id: ", _id);
-			const workedById = req.userId;
-			// console.log("workerid: ", workedById);
-
-			const result = await addTicketReplyFromAdmin({
-				_id,
-				workedById,
-				message,
-				sender,
-			});
-			console.log("result:", result);
-			if (result._id) {
-				return res.json({
-					status: "success",
-					message: "message updated successfully",
-				});
-			}
-			res.json({ status: "error", message: "unable to update message" });
-		} catch (error) {
-			res.json({ status: "error", message: error.message });
-		}
-	}
-);
 
 //change ticket status to either awaiting response from client or closed
 

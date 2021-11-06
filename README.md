@@ -48,3 +48,9 @@ all token API routes follows '/v1/tokens' for existing logged user authenticatio
 | #   | Routers      | Verbs | Progress | Is Private | Description                                 |
 | --- | ------------ | ----- | -------- | ---------- | ------------------------------------------- |
 | 1   | '/v1/tokens' | GET   | Done     | No         | Verify refresh JWT & Get a fresh access JWT |
+
+### Employee API Resources
+
+---
+
+### Admin API Resources

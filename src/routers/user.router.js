@@ -227,6 +227,7 @@ router.patch("/reset-password", updatePassReqValidation, async (req, res) => {
 	});
 });
 
+//logout client user
 router.delete("/logout", userAuthorization, async (req, res) => {
 	const { authorization } = req.headers;
 	//this data coming from database

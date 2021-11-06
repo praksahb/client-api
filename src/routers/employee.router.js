@@ -169,4 +169,6 @@ router.put(
 
 //update own (employee) information
 
+//logout employee user
+
 module.exports = router;
