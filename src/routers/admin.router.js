@@ -21,6 +21,8 @@ const {
 	addEmpOnTicket,
 } = require("../model/ticket/Ticket.model");
 
+const { getAllEmp4Admin } = require("../model/employee/Employee.model");
+
 const {
 	adminSignupValidation,
 	replyTicketMessageValidationFromEmployee,
@@ -30,6 +32,7 @@ const {
 	adminAuthorization,
 } = require("../middleware/Authorization.middleware");
 const { deleteJWT } = require("../helpers/redis.helper");
+const { getAllClient4Admin } = require("../model/user/User.model");
 
 //create one admin atleast --- POST route
 router.post("/signup", adminSignupValidation, async (req, res) => {
@@ -113,7 +116,7 @@ router.get("/", adminAuthorization, async (req, res) => {
 });
 
 //manual logout delete request
-router.delete("/logout", userAuthorization, async (req, res) => {
+router.delete("/logout", adminAuthorization, async (req, res) => {
 	const { authorization } = req.headers;
 
 	console.log(req.userId);
@@ -130,8 +133,8 @@ router.delete("/logout", userAuthorization, async (req, res) => {
 //ADMIN  TICKETs ROUTES
 
 //get all tickets according to status
-//can be changed to get all tickets by replies by admin id
-router.get("/find-tickets", userAuthorization, async (req, res) => {
+//use this route to help assign all open tickets to employees
+router.get("/find-tickets", adminAuthorization, async (req, res) => {
 	try {
 		const { status } = req.body;
 
@@ -143,7 +146,7 @@ router.get("/find-tickets", userAuthorization, async (req, res) => {
 });
 
 //get all tickets
-router.get("/all-tickets", userAuthorization, async (req, res) => {
+router.get("/all-tickets", adminAuthorization, async (req, res) => {
 	try {
 		const result = await getAllTickets4admin();
 		return res.json({ status: "success", result });
@@ -154,16 +157,34 @@ router.get("/all-tickets", userAuthorization, async (req, res) => {
 
 //get all clients
 //create method in user.model to fetch all users
+router.get("/all-clients", adminAuthorization, async (req, res) => {
+	try {
+		const result = await getAllClient4Admin();
+		return res.json({ status: "success", result });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
 
 //get all employees
+router.get("/all-employees", adminAuthorization, async (req, res) => {
+	try {
+		const result = await getAllEmp4Admin();
+		return res.json({ status: "success", result });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
 
 //assign ticket to employee id--- add workedById to ticket
-router.put("/all-tickets/:_id", userAuthorization, async (req, res) => {
+router.put("/all-tickets/:_id", adminAuthorization, async (req, res) => {
 	try {
 		const { _id } = req.params;
-		console.log(req.employee);
-		const workedById = req.employee._id;
 
+		//get emp id from req.body
+
+		const workedById = req.body.employee._id;
+		console.log("workedById:: ", workedById);
 		const result = await addEmpOnTicket({ _id, workedById });
 		if (result._id) {
 			return res.json({

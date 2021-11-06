@@ -52,6 +52,16 @@ const emailProcessor = ({ email, pin, type, verificationLink = "" }) => {
 			send(emailInfo);
 			break;
 		case "password-update-success":
+			emailInfo = {
+				from: '"CRM Company" <abe.kohler59@ethereal.email>', // sender address
+				to: email, // list of receivers
+				subject: "Password updated", // Subject line
+				text: "Your new password has been update", // plain text body
+				html: `<b>Hello </b>
+      				<p>Your new password has been update</p>`, // html body
+			};
+			send(emailInfo);
+			break;
 		case "new-user-confirmation-required":
 			emailInfo = {
 				from: '"CRM Company" <emilio.streich35@ethereal.email>', // sender address
@@ -62,7 +72,17 @@ const emailProcessor = ({ email, pin, type, verificationLink = "" }) => {
           <p>Please follow the link to verify your account, once verified you can login access the account</p> 
 					<p>${verificationLink}</p>`, // html body
 			};
-
+			send(emailInfo);
+			break;
+		case "new reply on ticket":
+			emailInfo = {
+				from: '"CRM Company" <abe.kohler59@ethereal.email>', // sender address
+				to: email, // list of receivers
+				subject: "A new reply on teh ticket", // Subject line
+				text: "A response regarding your ticket query has been posted", // plain text body
+				html: `<b>Hello </b>
+      				<p>A response regarding your ticket query has been posted</p>`, // html body
+			};
 			send(emailInfo);
 			break;
 

@@ -134,7 +134,7 @@ Content-Type: application/json
 ### GET request admin profile - endpoint
 
 GET http://localhost:3001/v1/admin
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM2MTA2NDM2LCJleHAiOjE2MzYxMDczMzZ9.y-YrPelpJejkNxO_GUvpEwV4tSlrm7EausgLOI9LWyY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imdob2RhczJAZmxvcmEuY29tIiwiaWF0IjoxNjM2MTE2NzMwLCJleHAiOjE2MzYxMTc2MzB9.yXz9_fKRNNPJDa2GjfPtknoda0f8zpEKoQW6IZUf7g0
 ### admin logout endpoint 
 
 DELETE http://localhost:3001/v1/admin/logout

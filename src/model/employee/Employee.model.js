@@ -70,9 +70,23 @@ const storeEmpRefreshJWT = (_id, token) => {
 	});
 };
 
+//admin method?
+const getAllEmp4Admin = () => {
+	return new Promise((resolve, reject) => {
+		try {
+			EmployeeSchema.find({})
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			reject(error);
+		}
+	});
+};
+
 module.exports = {
 	insertEmployee,
 	getEmpByEmail,
 	getEmpById,
 	storeEmpRefreshJWT,
+	getAllEmp4Admin,
 };

@@ -111,6 +111,19 @@ const verifyUser = (_id, email) => {
 	});
 };
 
+//admin method?
+const getAllClient4Admin = () => {
+	return new Promise((resolve, reject) => {
+		try {
+			UserSchema.find({})
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			reject(error);
+		}
+	});
+};
+
 module.exports = {
 	insertUser,
 	getUserByEmail,
@@ -118,4 +131,5 @@ module.exports = {
 	storeUserRefreshJWT,
 	updatePassword,
 	verifyUser,
+	getAllClient4Admin,
 };

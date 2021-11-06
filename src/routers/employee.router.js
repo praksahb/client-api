@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { hashPassword, comparePassword } = require("../helpers/bcrypt.helper");
+const { emailProcessor } = require("../helpers/email.helper");
 const {
 	createAccessJWT,
 	createRefreshJWT4Employee,
@@ -12,12 +13,20 @@ const {
 } = require("../middleware/Authorization.middleware");
 const {
 	adminSignupValidation,
+	replyTicketMessageValidationFromEmployee,
 } = require("../middleware/formValidation.middleware");
 
 const {
 	insertEmployee,
 	getEmpByEmail,
 } = require("../model/employee/Employee.model");
+
+const {
+	getTickets4Emp,
+	addTicketReply4Emp,
+} = require("../model/ticket/Ticket.model");
+
+const { getUserById } = require("../model/user/User.model");
 
 //only admin access can create employee
 router.post(
@@ -101,5 +110,63 @@ router.get("/", employeeAuthorization, async (req, res) => {
 		res.json({ status: "error", message: error.message });
 	}
 });
+
+//get all tickets assigned to employee
+router.get("/tickets", employeeAuthorization, async (req, res) => {
+	try {
+		//destructure id from employee info received from empAuth
+		const { _id } = req.empId;
+		//fetch tickets using id assigned to tickets under workedById
+		const result = await getTickets4Emp(_id);
+		return res.json({ status: "success", result });
+	} catch (error) {
+		console.log(error);
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+//add reply to ticket route-- send email to client on reply as well
+router.put(
+	"/ticket/:_id",
+	replyTicketMessageValidationFromEmployee,
+	employeeAuthorization,
+	async (req, res) => {
+		try {
+			//get ticket id from url params
+			const { _id } = req.params;
+			//get message from req.body
+			const { message } = req.body;
+			//get sender and workedById from employee obj from employeeAuthroization
+			const workedById = req.empId._id;
+			const sender = req.empId.name;
+
+			//send data to ticket.model function to add reply
+			const result = await addTicketReply4Emp({
+				_id,
+				workedById,
+				message,
+				sender,
+			});
+			//console.log("result:: ", result);
+			if (result && result._id) {
+				//get email of client user
+				const { clientId } = result;
+				const { email } = await getUserById(clientId);
+				//send email regarding response posted
+				await emailProcessor({ email, type: "new reply on ticket" });
+
+				return res.json({
+					status: "success",
+					message: "message added successfully",
+				});
+			}
+			res.json({ status: "error", message: "unable to add message/reply" });
+		} catch (error) {
+			res.json({ status: "error", message: error.message });
+		}
+	}
+);
+
+//update own (employee) information
 
 module.exports = router;

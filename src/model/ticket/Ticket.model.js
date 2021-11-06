@@ -126,20 +126,10 @@ const getAllTickets4admin = () => {
 
 //ticket response change or create new for employee
 
-//remove admin from this function and add employee to it instead
-const addTicketReplyFromAdmin = ({ _id, workedById, message, sender }) => {
+const addEmpOnTicket = ({ _id, workedById }) => {
 	return new Promise((resolve, reject) => {
 		try {
-			TicketSchema.findOneAndUpdate(
-				{ _id, workedById },
-				{
-					status: "pending client response",
-					$push: {
-						conversations: { message, sender },
-					},
-				},
-				{ new: true }
-			)
+			TicketSchema.findOneAndUpdate({ _id }, { workedById }, { new: true })
 				.then((data) => resolve(data))
 				.catch((error) => reject(error));
 		} catch (error) {
@@ -149,10 +139,35 @@ const addTicketReplyFromAdmin = ({ _id, workedById, message, sender }) => {
 	});
 };
 
-const addEmpOnTicket = ({ _id, workedById }) => {
+//Employee functions
+
+//fetch all tickets for employee dashboard
+const getTickets4Emp = (workedById) => {
 	return new Promise((resolve, reject) => {
 		try {
-			TicketSchema.findOneAndUpdate({ _id }, { workedById }, { new: true })
+			TicketSchema.find({ workedById })
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			reject(error);
+		}
+	});
+};
+
+//remove admin from this function and add employee to it instead
+const addTicketReply4Emp = ({ _id, workedById, message, sender }) => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.findOneAndUpdate(
+				{ _id, workedById },
+				{
+					status: "awaiting client response",
+					$push: {
+						conversations: { message, sender },
+					},
+				},
+				{ new: true }
+			)
 				.then((data) => resolve(data))
 				.catch((error) => reject(error));
 		} catch (error) {
@@ -171,6 +186,7 @@ module.exports = {
 	deleteTicket,
 	getAllTicketsByStatus,
 	getAllTickets4admin,
-	addTicketReplyFromAdmin,
 	addEmpOnTicket,
+	getTickets4Emp,
+	addTicketReply4Emp,
 };
