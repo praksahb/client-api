@@ -2,6 +2,7 @@ const { verifyAccessJWT } = require("../helpers/jwt.helper");
 const { getJWT, deleteJWT } = require("../helpers/redis.helper");
 const { getAdminById } = require("../model/admin/Admin.model");
 const { getEmpById } = require("../model/employee/Employee.model");
+const { getUserById } = require("../model/user/User.model");
 
 //change userAuthorization to clientAuthorization
 //universal auth middleware for all signed in users
@@ -9,24 +10,26 @@ const userAuthorization = async (req, res, next) => {
 	const { authorization } = req.headers;
 	//1. verfiy if jwt is valid
 	const decoded = await verifyAccessJWT(authorization);
-	console.log("decoded: ", decoded);
-	if (decoded.email) {
-		//2. check if jwt exists in redis
-		const userId = await getJWT(authorization);
-		//console.log(userId);
-		if (!userId) {
-			return res
-				.status(403)
-				.json({ message: "forbidden - failure to authenticate" });
-		}
-		//send id to req for further use//validation//etc
-		req.userId = userId;
-		return next();
+	//console.log("decoded: ", decoded);
+	if (!decoded && !decoded.email) {
+		deleteJWT(authorization);
+		return res.status(403).json({ message: "forbidden - auth token invalid" });
 	}
-	//change if logic so that next() is called at end of middleware
-	// instead of returning--
-	deleteJWT(authorization);
-	return res.status(403).json({ message: "forbidden - auth failed" });
+	//2. check if jwt exists in redis
+	const redisValueId = await getJWT(authorization);
+
+	if (!redisValueId) {
+		return res
+			.status(403)
+			.json({ message: "forbidden - failure to authenticate" });
+	}
+	//check id in user--client db
+	const clientId = await getUserById(redisValueId);
+	if (!clientId) {
+		return res.json({ status: "error", message: "forbidden auth" });
+	}
+	req.clientId = clientId;
+	next();
 };
 
 //create NEW employee AUTH middleware

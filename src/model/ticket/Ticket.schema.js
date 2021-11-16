@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const TicketSchema = new Schema({
 	clientId: {
 		type: Schema.Types.ObjectId,
+		ref: 'User'
 	},
 	workedById: {
 		type: Schema.Types.ObjectId,

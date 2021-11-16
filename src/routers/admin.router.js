@@ -25,10 +25,8 @@ const { getAllEmp4Admin } = require("../model/employee/Employee.model");
 
 const {
 	adminSignupValidation,
-	replyTicketMessageValidationFromEmployee,
 } = require("../middleware/formValidation.middleware");
 const {
-	userAuthorization,
 	adminAuthorization,
 } = require("../middleware/Authorization.middleware");
 const { deleteJWT } = require("../helpers/redis.helper");

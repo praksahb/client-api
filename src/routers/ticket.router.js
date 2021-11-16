@@ -38,9 +38,9 @@ router.post(
 		try {
 			const { subject, sender, message } = req.body;
 
-			const userId = req.userId;
+			const clientId = req.clientId._id;
 			const ticketObj = {
-				clientId: userId, //TODO get clientID from using accessjwt
+				clientId: clientId, //TODO get clientID from using accessjwt
 				subject,
 				conversations: [
 					{
@@ -72,9 +72,10 @@ router.post(
 router.get("/", userAuthorization, async (req, res) => {
 	//receive new ticket data
 	try {
-		const userId = req.userId;
+		//console.log("client id: ", req.clientId);
+		const clientId = req.clientId._id;
 
-		const result = await getTickets(userId);
+		const result = await getTickets(clientId);
 
 		return res.json({
 			status: "success",
@@ -89,7 +90,7 @@ router.get("/", userAuthorization, async (req, res) => {
 router.get("/:_id", userAuthorization, async (req, res) => {
 	try {
 		const { _id } = req.params;
-		const clientId = req.userId;
+		const clientId = req.clientId._id;
 
 		const result = await getTicketById(_id, clientId);
 
@@ -108,7 +109,7 @@ router.put(
 		try {
 			const { message, sender } = req.body;
 			const { _id } = req.params;
-			const clientId = req.userId;
+			const clientId = req.clientId._id;
 
 			const result = await addTicketReply({ _id, clientId, message, sender });
 
@@ -130,7 +131,7 @@ router.put(
 router.patch("/close-ticket/:_id", userAuthorization, async (req, res) => {
 	try {
 		const { _id } = req.params;
-		const clientId = req.userId;
+		const clientId = req.clientId._id;
 
 		const result = await updateStatusToClose({ _id, clientId });
 
@@ -151,7 +152,7 @@ router.patch("/close-ticket/:_id", userAuthorization, async (req, res) => {
 router.delete("/:_id", userAuthorization, async (req, res) => {
 	try {
 		const { _id } = req.params;
-		const clientId = req.userId;
+		const clientId = req.clientId._id;
 
 		const result = await deleteTicket({ _id, clientId });
 

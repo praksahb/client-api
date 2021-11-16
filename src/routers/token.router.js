@@ -15,7 +15,7 @@ router.get("/client", async (req, res, next) => {
 	if (decoded.email) {
 		//2. check if the jwt is existing in users db collection
 		const userProfile = await getUserByEmail(decoded.email);
-		console.log("userProfile: ", userProfile);
+		//console.log("userProfile: ", userProfile);
 		if (userProfile._id) {
 			let tokenExpiryDate = userProfile.refreshJWT.addedAt;
 			const dbRefreshToken = userProfile.refreshJWT.token;
@@ -36,7 +36,6 @@ router.get("/client", async (req, res, next) => {
 			return res.json({ status: "success", accessJWT });
 		}
 	}
-
 	return res.status(403).json({ message: "forbidden" });
 });
 

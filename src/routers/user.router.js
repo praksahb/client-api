@@ -1,5 +1,4 @@
 const express = require("express");
-const { route } = require("./ticket.router");
 const router = express.Router();
 
 const {
@@ -41,12 +40,7 @@ router.all("/", (req, res, next) => {
 
 //GET user profile router
 router.get("/", userAuthorization, async (req, res) => {
-	//3. extract user id- 1. & 2. done inside auth middleware
-
-	const _id = req.userId;
-	const userProfile = await getUserById(_id);
-	//4. get user profile based on the user id
-	const { name, email } = userProfile;
+	const { _id, name, email } = req.clientId;
 	res.json({
 		user: {
 			_id,
@@ -122,6 +116,11 @@ router.post("/login", async (req, res) => {
 
 	//get user's _id with email from db
 	const user = await getUserByEmail(email);
+
+	//check if user exists
+	if (!user) {
+		return res.json({ status: "error", message: "user not found" });
+	}
 
 	//check if acc is verified
 	if (!user.isVerified) {
@@ -230,9 +229,8 @@ router.patch("/reset-password", updatePassReqValidation, async (req, res) => {
 //logout client user
 router.delete("/logout", userAuthorization, async (req, res) => {
 	const { authorization } = req.headers;
-	//this data coming from database
-	const _id = req.userId;
-	console.log(_id);
+	//this data coming from middleware
+	const { _id } = req.clientId;
 
 	//2.delete accessJWT from redis database
 	deleteJWT(authorization);
