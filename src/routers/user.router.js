@@ -99,13 +99,12 @@ router.post("/", signUpDataValidation, async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		let message = "Unable to create new user at the moment Please try later";
-		res.json({ status: "error", /* message: error.*/ message });
+		res.json({ status: "error", message });
 	}
 });
 
 //user LOGIN sign in router
 router.post("/login", async (req, res) => {
-	console.log(req.body);
 	//USER email AUTHentication via bcrypt
 	const { email, password } = req.body;
 	// console.log({ email, password });
@@ -113,21 +112,16 @@ router.post("/login", async (req, res) => {
 	if (!email || !password) {
 		return res.json({ status: "error", message: "Invalid form submission" });
 	}
-
 	//get user's _id with email from db
 	const user = await getUserByEmail(email);
-
 	//check if user exists
 	if (!user) {
 		return res.json({ status: "error", message: "user not found" });
 	}
-
 	//check if acc is verified
 	if (!user.isVerified) {
 		return res.json({ status: "error", message: "pls verify acc first" });
 	}
-
-	//console.log(user._id.toString());
 	//get encrypted password using _id from db for comparison
 	const passFromDb = user && user._id ? user.password : null;
 	if (!passFromDb) {
@@ -135,12 +129,10 @@ router.post("/login", async (req, res) => {
 	}
 	//compare with db- comparePassword func from bcrypt
 	const result = await comparePassword(password, passFromDb);
-
 	if (!result) {
 		//returns false
 		return res.json({ status: "error", message: "invalid email or password" });
 	}
-
 	//else create AUTH TOKENS
 	const accessJWT = await createAccessJWT(user.email, `${user._id}`);
 	const refreshJWT = await createRefreshJWT(user.email, `${user._id}`);

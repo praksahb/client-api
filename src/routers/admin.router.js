@@ -182,7 +182,7 @@ router.put("/all-tickets/:_id", adminAuthorization, async (req, res) => {
 
 		//get emp id from req.body
 		const workedById = req.body.employee._id;
-		console.log("workedById:: ", workedById);
+		console.log("workedById: ", workedById);
 
 		//add emp to ticket
 		const result = await addEmpOnTicket({ _id, workedById });

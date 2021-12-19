@@ -4,10 +4,11 @@ const Schema = mongoose.Schema;
 const TicketSchema = new Schema({
 	clientId: {
 		type: Schema.Types.ObjectId,
-		ref: 'User'
+		ref: "User",
 	},
 	workedById: {
 		type: Schema.Types.ObjectId,
+		ref: "Employee",
 	},
 	subject: {
 		type: String,
@@ -20,7 +21,6 @@ const TicketSchema = new Schema({
 		required: true,
 		default: Date.now(),
 	},
-
 	status: {
 		type: String,
 		maxLength: 40,
@@ -50,6 +50,4 @@ const TicketSchema = new Schema({
 	],
 });
 
-module.exports = {
-	TicketSchema: mongoose.model("Ticket", TicketSchema),
-};
+module.exports = mongoose.model("Ticket", TicketSchema);

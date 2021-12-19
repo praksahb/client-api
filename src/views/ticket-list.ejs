@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/styles.css" />
+		<title>Ticket listing pages</title>
+	</head>
+	<body>
+		<div class="tablebox" style="overflow-x: auto">
+			<table class="tableContainer">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Subject</th>
+						<th>Status</th>
+						<th>Opened Date</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% result.forEach((element, index) => { %> <% const {
+					subject,status,openAt } = element; %>
+					<tr>
+						<td><%= index+1 %></td>
+						<td>
+							<a href="/v1/employee/ticket/<%= element._id %>"
+								><%= subject %></a
+							>
+						</td>
+						<td><%= status %></td>
+						<td><%= new Date(openAt).toLocaleString() %></td>
+						<td>
+							<button>
+								<a href="/v1/employee/assign-ticket/<%= element._id %>"
+									>Accept Ticket</a
+								>
+							</button>
+						</td>
+					</tr>
+					<% }); %>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

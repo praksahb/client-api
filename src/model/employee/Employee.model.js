@@ -1,6 +1,5 @@
-const { EmployeeSchema } = require("./Employee.schema");
+const EmployeeSchema = require("./Employee.schema");
 
-//only for admins
 const insertEmployee = (empObj) => {
 	return new Promise((resolve, reject) => {
 		EmployeeSchema(empObj)

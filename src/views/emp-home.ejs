@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+  	<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Home page</title>
+</head>
+
+<body>
+
+  <h2>Welcome, <%= user.name %></h2>
+  <% if(user) { %>
+    <%- include('partials/sidebar-employee.ejs')  %> 
+    <div style="overflow-x:auto;" class="tablebox">
+      <table class="tableContainer">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Ticket Date</th>
+            <th>View your Tickets</th>
+        </tr>
+        </thead>
+        <tbody>
+          <% if(result.length > 0) { %>
+            <% result.map((item, index) => { %>
+              <%= console.log(item); %>
+              <% const { _id, subject, status, openAt} = item; %>
+              <tr>
+                <td><%= index+1 %></td>
+                <td><%= subject %></td>
+                <td><%= status %></td>  
+                <td><%= new Date(openAt).toLocaleString() %></td>
+                <td><a href="/v1/employee/work-ticket/<%= _id %>">View</a></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td>No tickets to show</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+</body>
+</html>

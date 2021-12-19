@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/styles.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<% if(user) { %> <%- include('partials/sidebar-employee.ejs') %> <% } %>
+
+		<div class="content">
+			<h4>Ticket ID: <%= result._id %></h4>
+			<% if(result.clientId.toString() === clientUser._id.toString()) { %>
+			<h4>Client Name: <%= clientUser.name %></h4>
+			<h4>Company Name: <%= clientUser.company %></h4>
+			<% } %>
+			<h4>Subject: <%= result.subject %></h4>
+			<h4>Status: <%= result.status %></h4>
+			<h4>Open Date: <%= new Date(result.openAt).toLocaleString() %></h4>
+			<div class="">
+				<% result.conversations.forEach(element => { %>
+				<div class="msgContainer">
+					<p><b>Sender: </b><%= element.sender %></p>
+					<p>
+						<b>Send Date: </b><%= new Date(element.msgAt).toLocaleString() %>
+					</p>
+					<p><b>Message: </b><%= element.message %></p>
+				</div>
+				<% }) %>
+			</div>
+			<div class="">
+				<form class="thisForm">
+					<label for="sender">Sender Name: </label>
+					<input
+						type="text"
+						name="sender"
+						size="10"
+						value="<%= user.name %>"
+						disabled
+					/>
+					<label for="message">Enter your message: </label>
+					<input class="submissionfield" type="text" name="message" required />
+					<input type="hidden" name="tid" value="<%= result._id %>" />
+					<button>Send Reply</button>
+				</form>
+			</div>
+		</div>
+		<script>
+			const form = document.querySelector(".thisForm");
+
+			form.addEventListener("submit", async (e) => {
+				e.preventDefault();
+
+				const message = form.message.value;
+				const tid = form.tid.value;
+
+				try {
+					//perform fetch req on reply ticket using PUT method
+					const uri = "/v1/employee/work-ticket/" + tid;
+					const res = await fetch(uri, {
+						method: "PUT",
+						body: JSON.stringify({ message }),
+						headers: { "Content-Type": "application/json" },
+					});
+					const data = await res.json();
+					console.log(data);
+
+					if (data.status === "success") {
+						location.reload();
+					}
+					if (data.status === "error") {
+						//do error work redirect or send alert
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			});
+		</script>
+	</body>
+</html>

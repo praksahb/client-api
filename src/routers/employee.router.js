@@ -1,12 +1,12 @@
 const express = require("express");
+const {
+	employee_login_post,
+	employee_signup_post,
+} = require("../controllers/authControllers");
 const router = express.Router();
 
-const { hashPassword, comparePassword } = require("../helpers/bcrypt.helper");
 const { emailProcessor } = require("../helpers/email.helper");
-const {
-	createAccessJWT,
-	createRefreshJWT4Employee,
-} = require("../helpers/jwt.helper");
+
 const {
 	adminAuthorization,
 	employeeAuthorization,
@@ -17,97 +17,44 @@ const {
 } = require("../middleware/formValidation.middleware");
 
 const {
-	insertEmployee,
-	getEmpByEmail,
-} = require("../model/employee/Employee.model");
-
-const {
 	getTickets4Emp,
 	addTicketReply4Emp,
+	getAllTicketsByStatus,
+	addEmpOnTicket,
+	getTicketById2,
 } = require("../model/ticket/Ticket.model");
 
 const { getUserById } = require("../model/user/User.model");
 
-//only admin access can create employee
-router.post(
-	"/add-emp",
-	adminSignupValidation,
-	adminAuthorization,
-	async (req, res) => {
-		const { name, email, password, phone, dob, address } = req.body;
-		try {
-			const hashedPass = await hashPassword(password);
-			const empObj = {
-				name,
-				email,
-				password: hashedPass,
-				phone,
-				dob,
-				address,
-			};
-			const result = await insertEmployee(empObj);
-			res.json({ status: "success", message: "created employee", result });
-		} catch (error) {
-			console.log(error);
-			res.json({ status: "error", message: error.message });
-		}
-	}
-);
+router.get("/signup", (req, res) => res.render("signup"));
+// create employee
+router.post("/signup", employee_signup_post);
 
+router.get("/login", (req, res) => res.render("login"));
 //employee login route
-router.post("/login", async (req, res) => {
-	const { email, password } = req.body;
-
-	// sv side check for null values
-	if (!email || !password) {
-		return res.json({ status: "error", message: "invalid email or password" });
-	}
-	//get employee from db using email
-	const employee = await getEmpByEmail(email);
-	//get hashed password from employee-
-	//if employee is null get null value
-	const hashedpassFromDB = employee && employee._id ? employee.password : null;
-	if (!hashedpassFromDB) {
-		return res.json({ status: "error", message: "invalid email or password" });
-	}
-	//comparison of password
-	const result = await comparePassword(password, hashedpassFromDB);
-	if (!result) {
-		return res.json({
-			status: "error",
-			message: "failed to auth- invalid email or password",
-		});
-	}
-
-	//create JWTs
-	const accessJWT = await createAccessJWT(
-		employee.email,
-		employee._id.toString()
-	);
-	const refreshJWT = await createRefreshJWT4Employee(
-		employee.email,
-		`${employee._id}`
-	);
-
-	res.json({
-		status: "success",
-		message: "login successful",
-		accessJWT,
-		refreshJWT,
-	});
-});
+router.post("/login", employee_login_post);
 
 //get employee home page
 router.get("/", employeeAuthorization, async (req, res) => {
 	try {
-		const empProfile = req.empId;
-		if (!empProfile) {
-			return res.json({ status: "error", message: "invalid login" });
-		}
-		const { _id, name, email } = empProfile;
-		res.json({ employee: _id, name, email });
+		const { _id, name, email } = req.empId;
+		const result = await getTickets4Emp(_id);
+
+		res.render("emp-home", { result, employee: { _id, name, email } });
 	} catch (error) {
 		res.json({ status: "error", message: error.message });
+	}
+});
+
+//view all tickets with status= pending operator response,
+//will point to all tickets recently created, which dont have workedById values
+router.get("/open-tickets", employeeAuthorization, async (req, res) => {
+	try {
+		const status = "pending operator response";
+		const result = await getAllTicketsByStatus(status);
+		res.render("ticket-list", { result });
+	} catch (error) {
+		console.log(error);
 	}
 });
 
@@ -125,9 +72,64 @@ router.get("/tickets", employeeAuthorization, async (req, res) => {
 	}
 });
 
+//view tickets -- from open tickets page
+router.get("/ticket/:_id", employeeAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+		const result = await getTicketById2(_id);
+
+		if (result) {
+			return res.render("ticket-page", { result });
+		}
+		res.json({ status: "error", message: "invalid ticket id" });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
+// **PUT request ideally** employee assign ticket to self
+router.get("/assign-ticket/:_id", employeeAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+		const workedById = req.empId._id;
+		const result = await addEmpOnTicket({ _id, workedById });
+		if (result) {
+			res.redirect("/v1/employee");
+		}
+		res.json({ status: "error", message: "unable to add emp to ticket" });
+	} catch (error) {
+		console.log(error);
+	}
+});
+
+//view & edit tickets
+router.get("/work-ticket/:_id", employeeAuthorization, async (req, res) => {
+	try {
+		const { _id } = req.params;
+
+		// const employee = req.empId;
+		// console.log("EMPlOYEE: ", employee);
+		//employee already passed inside res.locals.user
+		//can be accessed in rendered page using user
+
+		const result = await getTicketById2(_id);
+		if (result) {
+			const { clientId } = result;
+			const clientUser = await getUserById(clientId);
+			if (clientUser) {
+				return res.render("edit-ticket-page", { result, clientUser });
+			}
+			res.json({ status: "error", message: "ticket has no owner" });
+		}
+		res.json({ status: "error", message: "invalid ticket id" });
+	} catch (error) {
+		res.json({ status: "error", message: error.message });
+	}
+});
+
 //add reply to ticket route-- send email to client on reply as well
 router.put(
-	"/ticket/:_id",
+	"/work-ticket/:_id",
 	replyTicketMessageValidationFromEmployee,
 	employeeAuthorization,
 	async (req, res) => {
@@ -136,10 +138,11 @@ router.put(
 			const { _id } = req.params;
 			//get message from req.body
 			const { message } = req.body;
+			//console.log(_id, message);
 			//get sender and workedById from employee obj from employeeAuthroization
 			const workedById = req.empId._id;
 			const sender = req.empId.name;
-
+			console.log(workedById, sender);
 			//send data to ticket.model function to add reply
 			const result = await addTicketReply4Emp({
 				_id,
@@ -147,12 +150,12 @@ router.put(
 				message,
 				sender,
 			});
-			//console.log("result:: ", result);
+			console.log("result:: ", result);
 			if (result && result._id) {
 				//get email of client user
 				const { clientId } = result;
 				const { email } = await getUserById(clientId);
-				//send email regarding response posted
+				// //send email regarding response posted
 				await emailProcessor({ email, type: "new reply on ticket" });
 
 				return res.json({

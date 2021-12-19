@@ -1,4 +1,4 @@
-const { UserSchema } = require("./User.schema");
+const UserSchema = require("./User.schema");
 
 const insertUser = (userObj) => {
 	return new Promise((resolve, reject) => {

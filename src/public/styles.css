@@ -1,0 +1,145 @@
+/* .sidenav {
+	height: 100%; 100% Full-height
+	width: 200px; 0 width - change this with JavaScript
+	position: fixed; Stay in place
+	z-index: 1; Stay on top
+	top: 0; Stay at the top
+	left: 0;
+	background-color: #111; Black
+	overflow-x: hidden; Disable horizontal scroll
+	padding-top: 40px; Place content 60px from the top
+	transition: 0.5s; 0.5 second transition effect to slide in the sidenav 
+} */
+
+/* The navigation menu links */
+/* .sidenav a {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 15px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+} */
+
+/* When you mouse over the navigation links, change their color */
+/* .sidenav a:hover {
+	color: #f1f1f1;
+} */
+
+.sidebar {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 200px;
+	z-index: 1;
+	/* top: 0; */
+	left: 0;
+	background-color: #f1f1f1;
+	position: fixed;
+	height: 100%;
+	overflow-x: hidden;
+}
+
+/* Active/current link */
+.sidebar a {
+	display: block;
+	color: black;
+	padding: 16px;
+	text-decoration: none;
+}
+
+/* Active/current link */
+.sidebar a.active {
+	background-color: #04aa6d;
+	color: white;
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+	background-color: #555;
+	color: white;
+}
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.content {
+	margin-left: 200px;
+	padding: 1px 16px;
+	height: 1000px;
+}
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+	.sidebar {
+		width: 100%;
+		height: auto;
+		position: relative;
+	}
+	.sidebar a {
+		float: left;
+	}
+	div.content {
+		margin-left: 0;
+	}
+}
+
+/* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 400px) {
+	.sidebar a {
+		text-align: center;
+		float: none;
+	}
+}
+
+.msgContainer {
+	box-sizing: border-box;
+	width: 25rem;
+	border: 2px solid #dedede;
+	border-color: #ccc;
+	background-color: #ddd;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px 0;
+}
+
+.submissionfield {
+	height: 100px;
+	width: 400px;
+	border: 1px solid #999999;
+	padding: 5px;
+}
+
+.tablebox {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 200px;
+	margin-top: 5rem; /*set to a negative number 1/2 of your height*/
+	margin-left: -15rem; /*set to a negative number 1/2 of your width*/
+}
+
+.tableContainer {
+	border-collapse: inherit;
+	width: 50%;
+	margin-top: 200px;
+	border: 2px solid #dedede;
+	border-color: #ccc;
+	background-color: #ddd;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;
+}
+
+.tableContainer td {
+	height: 2rem;
+	text-align: center;
+	vertical-align: bottom;
+}
+
+.tableContainer th {
+	background-color: #04aa6d;
+}
+
+.content {
+	margin-left: 200px;
+	padding-left: 20px;
+}

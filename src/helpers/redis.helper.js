@@ -1,9 +1,7 @@
 const redis = require("redis");
 
 const redisPassword = process.env.REDIS_PASS;
-const client = redis.createClient(process.env.REDIS_URI, {
-	password: redisPassword,
-});
+const client = redis.createClient(process.env.REDIS_URI);
 
 client.on("error", (err) => {
 	console.error(err);
@@ -12,6 +10,8 @@ client.on("error", (err) => {
 // client.auth(redisPassword, (err) => {
 //	if (err) console.log(err);
 //});
+
+//  key = accessJWT , value = id
 
 const setJWT = (key, value) => {
 	return new Promise((resolve, reject) => {
@@ -48,6 +48,7 @@ const deleteJWT = (key) => {
 };
 
 module.exports = {
+	client,
 	setJWT,
 	getJWT,
 	deleteJWT,

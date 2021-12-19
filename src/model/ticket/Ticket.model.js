@@ -1,4 +1,4 @@
-const { TicketSchema } = require("./Ticket.schema");
+const TicketSchema = require("./Ticket.schema");
 
 const insertTicket = (ticketObj) => {
 	return new Promise((resolve, reject) => {
@@ -31,6 +31,19 @@ const getTicketById = (_id, clientId) => {
 	return new Promise((resolve, reject) => {
 		try {
 			TicketSchema.findOne({ _id, clientId })
+				.then((data) => resolve(data))
+				.catch((error) => reject(error));
+		} catch (error) {
+			//console.log(error);
+			reject(error);
+		}
+	});
+};
+
+const getTicketById2 = (_id) => {
+	return new Promise((resolve, reject) => {
+		try {
+			TicketSchema.findOne({ _id })
 				.then((data) => resolve(data))
 				.catch((error) => reject(error));
 		} catch (error) {
@@ -129,7 +142,11 @@ const getAllTickets4admin = () => {
 const addEmpOnTicket = ({ _id, workedById }) => {
 	return new Promise((resolve, reject) => {
 		try {
-			TicketSchema.findOneAndUpdate({ _id }, { workedById }, { new: true })
+			TicketSchema.findOneAndUpdate(
+				{ _id },
+				{ workedById, status: "worked on" },
+				{ new: true }
+			)
 				.then((data) => resolve(data))
 				.catch((error) => reject(error));
 		} catch (error) {
@@ -181,6 +198,7 @@ module.exports = {
 	insertTicket,
 	getTickets,
 	getTicketById,
+	getTicketById2,
 	addTicketReply,
 	updateStatusToClose,
 	deleteTicket,

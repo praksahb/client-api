@@ -1,4 +1,4 @@
-const { AdminSchema } = require("./Admin.schema");
+const AdminSchema = require("./Admin.schema");
 
 const insertAdmin = (adminObj) => {
 	return new Promise((resolve, reject) => {

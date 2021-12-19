@@ -34,32 +34,42 @@ const userAuthorization = async (req, res, next) => {
 
 //create NEW employee AUTH middleware
 const employeeAuthorization = async (req, res, next) => {
-	const { authorization } = req.headers;
-
-	const decoded = await verifyAccessJWT(authorization);
-	if (!decoded && !decoded.email) {
-		deleteJWT(authorization);
-		return res.json({
-			status: "error",
-			message: "forbidden invalid auth token",
-		});
+	const authorization = req.cookies.accessJwt;
+	//can use refreshJWT to generate a new accessJWT--- can try if time
+	try {
+		if (!authorization) {
+			return res.redirect("/v1/employee/login");
+		}
+		const decoded = await verifyAccessJWT(authorization);
+		if (!decoded && !decoded.email) {
+			deleteJWT(authorization);
+			res.locals.user = null;
+			return res.json({
+				status: "error",
+				message: "forbidden invalid auth token",
+			});
+		}
+		//verify auth token to get id
+		const redisValueId = await getJWT(authorization);
+		if (!redisValueId) {
+			res.locals.user = null;
+			return res.json({
+				status: "error",
+				message: "forbidden invalid auth token",
+			});
+		}
+		//verify id in employee collections db
+		const empId = await getEmpById(redisValueId);
+		if (!empId) {
+			res.locals.user = null;
+			return res.json({ status: "error 403", message: "forbidden auth" });
+		}
+		res.locals.user = empId;
+		req.empId = empId;
+		next();
+	} catch (error) {
+		console.log(error);
 	}
-	//verify auth token to get id
-	const redisValueId = await getJWT(authorization);
-	if (!redisValueId) {
-		return res.json({
-			status: "error",
-			message: "forbidden invalid auth token",
-		});
-	}
-	//verify id in employee collections db
-	const empId = await getEmpById(redisValueId);
-
-	if (!empId) {
-		return res.json({ status: "error 403", message: "forbidden auth" });
-	}
-	req.empId = empId;
-	next();
 };
 
 //not required maybe, as performing same function as get request
