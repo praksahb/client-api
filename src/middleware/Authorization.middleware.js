@@ -7,29 +7,36 @@ const { getUserById } = require("../model/user/User.model");
 //change userAuthorization to clientAuthorization
 //universal auth middleware for all signed in users
 const userAuthorization = async (req, res, next) => {
-	const { authorization } = req.headers;
-	//1. verfiy if jwt is valid
-	const decoded = await verifyAccessJWT(authorization);
-	//console.log("decoded: ", decoded);
-	if (!decoded && !decoded.email) {
-		deleteJWT(authorization);
-		return res.status(403).json({ message: "forbidden - auth token invalid" });
+	try {
+		const { authorization } = req.headers;
+		if (!authorization) {
+			return res.redirect("/v1/user/login");
+		}
+		//1. verfiy if jwt is valid
+		const decoded = await verifyAccessJWT(authorization);
+		if (!decoded) {
+			return res
+				.status(403)
+				.json({ message: "forbidden - auth token invalid" });
+		}
+		//2. check if jwt exists in redis
+		const redisValueId = await getJWT(authorization);
+		if (!redisValueId) {
+			return res
+				.status(403)
+				.json({ message: "forbidden - failure to authenticate" });
+		}
+		//check id in user--client db
+		const clientId = await getUserById(redisValueId);
+		if (!clientId) {
+			return res.json({ status: "error", message: "forbidden auth" });
+		}
+		req.clientId = clientId;
+		next();
+	} catch (error) {
+		//console.log(error);
+		next(error);
 	}
-	//2. check if jwt exists in redis
-	const redisValueId = await getJWT(authorization);
-
-	if (!redisValueId) {
-		return res
-			.status(403)
-			.json({ message: "forbidden - failure to authenticate" });
-	}
-	//check id in user--client db
-	const clientId = await getUserById(redisValueId);
-	if (!clientId) {
-		return res.json({ status: "error", message: "forbidden auth" });
-	}
-	req.clientId = clientId;
-	next();
 };
 
 //create NEW employee AUTH middleware

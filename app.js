@@ -62,6 +62,7 @@ app.use('/v1/admin', adminRouter);
 app.use('/v1/employee', employeeRouter);
 app.use('/admin', adminBroRouter);
 
+app.use
 // app.use("/", (req, res) => {
 // 	res.render("home");
 // });

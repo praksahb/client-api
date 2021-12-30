@@ -86,8 +86,6 @@ router.post("/", signUpDataValidation, async (req, res) => {
 			password: hashedPass,
 		};
 		const result = await insertUser(newUserObj);
-		console.log(result);
-
 		//send verification email
 		await emailProcessor({
 			email,
@@ -97,9 +95,9 @@ router.post("/", signUpDataValidation, async (req, res) => {
 
 		res.json({ status: "success", message: "New user created", result });
 	} catch (error) {
-		console.log(error);
-		let message = "Unable to create new user at the moment Please try later";
-		res.json({ status: "error", message });
+		//console.log(error);
+		let message = "Email already exists";
+		res.status(409).json({ status: "error", message });
 	}
 });
 
@@ -110,28 +108,36 @@ router.post("/login", async (req, res) => {
 	// console.log({ email, password });
 	//server side check for null values
 	if (!email || !password) {
-		return res.json({ status: "error", message: "Invalid form submission" });
+		return res
+			.status(400)
+			.json({ status: "error", message: "Invalid form submission" });
 	}
 	//get user's _id with email from db
 	const user = await getUserByEmail(email);
 	//check if user exists
 	if (!user) {
-		return res.json({ status: "error", message: "user not found" });
+		return res.status(400).json({ status: "error", message: "user not found" });
 	}
 	//check if acc is verified
 	if (!user.isVerified) {
-		return res.json({ status: "error", message: "pls verify acc first" });
+		return res
+			.status(401)
+			.json({ status: "error", message: "pls verify acc first" });
 	}
 	//get encrypted password using _id from db for comparison
 	const passFromDb = user && user._id ? user.password : null;
 	if (!passFromDb) {
-		return res.json({ status: "error", message: "invalid email or password" });
+		return res
+			.status(400)
+			.json({ status: "error", message: "invalid email or password" });
 	}
 	//compare with db- comparePassword func from bcrypt
 	const result = await comparePassword(password, passFromDb);
 	if (!result) {
 		//returns false
-		return res.json({ status: "error", message: "invalid email or password" });
+		return res
+			.status(400)
+			.json({ status: "error", message: "invalid email or password" });
 	}
 	//else create AUTH TOKENS
 	const accessJWT = await createAccessJWT(user.email, `${user._id}`);

@@ -25,7 +25,7 @@ const send = (info) => {
 			resolve(result);
 		} catch (error) {
 			console.log(error);
-			//reject(error);
+			reject(error);
 		}
 	});
 };

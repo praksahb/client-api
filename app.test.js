@@ -9,6 +9,10 @@ const {
 
 const mongoose = require("mongoose");
 
+beforeAll(async () => {
+	await mongoose.connect(process.env.MONGO_URL);
+});
+
 afterAll(async () => {
 	// Closing the DB connection allows Jest to exit successfully.
 	try {
